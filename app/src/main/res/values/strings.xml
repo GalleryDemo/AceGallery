@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AceGallery</string>
+
+    <string name="camera_button">Camera</string>
+    <string name="picture_image">Picture</string>
+
+    <string name="time">2019年11月6日</string>
+    <string name="fake_photo">假装我是张照片</string>
+
+</resources>

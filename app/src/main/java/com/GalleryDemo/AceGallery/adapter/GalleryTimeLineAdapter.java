@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
+import com.GalleryDemo.AceGallery.Utils.Latlong2Address;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
 
 import java.io.FileNotFoundException;
@@ -90,6 +91,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (holder instanceof BodyViewHolder) {
             Log.d(TAG, "onBindViewHolder: body position = " + position);
+
+            if (mItemList.get(position).getMediaLocation()[0] != 0 || mItemList.get(position).getMediaLocation()[1] != 0) {
+                new Thread(new Latlong2Address(mItemList, position)).start();
+            }
 
 
             Log.d(TAG, "onBindViewHolder: list(" + position + ").MediaId = " + mItemList.get(position).getMediaId());

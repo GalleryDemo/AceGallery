@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -114,7 +115,6 @@ public class MediaLoader_Uri implements LoaderManager.LoaderCallbacks {
         }
 
         loadDataCallBack.onData(allMediaInfo);
-        mCursor.close();
 
     }
 

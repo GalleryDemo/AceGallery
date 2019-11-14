@@ -1,6 +1,7 @@
 package com.GalleryDemo.AceGallery.ui;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,8 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_time_line_activity);
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -14,6 +14,7 @@ public class MediaInfoBean implements Serializable {
     private int mediaHeight;
     private int mediaWidth;
     private float[] mediaLocation;
+    private String mediaAddress;
     private int dataType; //文件数据类型，0表示日期数据， 1表示media数据
 
     public MediaInfoBean(int dataType, String mediaDate) {
@@ -30,6 +31,10 @@ public class MediaInfoBean implements Serializable {
         this.mediaWidth = mediaWidth;
         this.mediaLocation = mediaLocation;
         this.dataType = dataType;
+    }
+
+    public void setMediaAddress(String mediaAddress) {
+        this.mediaAddress = mediaAddress;
     }
 
     public void setMediaUri(Uri mediaUri) {
@@ -110,5 +115,9 @@ public class MediaInfoBean implements Serializable {
 
     public int getMediaId() {
         return mediaId;
+    }
+
+    public String getMediaAddress() {
+        return mediaAddress;
     }
 }

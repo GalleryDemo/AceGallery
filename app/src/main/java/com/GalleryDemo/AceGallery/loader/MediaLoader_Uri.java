@@ -43,7 +43,7 @@ public class MediaLoader_Uri implements LoaderManager.LoaderCallbacks {
 
         Uri queryUri = MediaStore.Files.getContentUri("external");
         CursorLoader cursorLoader = new CursorLoader(mContext, queryUri, null, selection,
-                null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC");
+                null, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC");
         return cursorLoader;
     }
 
@@ -87,7 +87,7 @@ public class MediaLoader_Uri implements LoaderManager.LoaderCallbacks {
                 };
             }
             String mediaName = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME));
-            long mediaTime = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_ADDED)); //单位是秒
+            long mediaTime = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_MODIFIED)); //单位是秒
             int mediaType = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE));
             int mediaHeight = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.HEIGHT));
             int mediaWidth = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.WIDTH));

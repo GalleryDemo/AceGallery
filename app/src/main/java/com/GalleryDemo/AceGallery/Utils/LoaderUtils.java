@@ -25,14 +25,14 @@ public class LoaderUtils {
     }
 
     public static String time2Date (long time) {
-        Date date = time > 1000000000000L ? new Date(time) : new Date(time * 1000);
+        Date date = new Date(time * 1000);
         String result = new SimpleDateFormat("yyyy-MM-dd").format(date);
         return result;
     }
 
     public static boolean isSameDay (long time1, long time2) {
-        Date date1 = time1 > 1000000000000L ? new Date(time1) : new Date(time1 * 1000);
-        Date date2 = time2 > 1000000000000L ? new Date(time2) : new Date(time2 * 1000);
+        Date date1 = new Date(time1 * 1000);
+        Date date2 = new Date(time2 * 1000);
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
         Calendar cal2 = Calendar.getInstance();

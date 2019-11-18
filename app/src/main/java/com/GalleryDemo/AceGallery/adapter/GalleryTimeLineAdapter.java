@@ -1,3 +1,11 @@
+/**
+ * @author Lumpy
+ * @date 2019.11.14
+ * @version 1.0
+ *
+ */
+
+
 package com.GalleryDemo.AceGallery.adapter;
 
 import android.content.Context;
@@ -72,10 +80,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEAD_TYPE) {
-            View headView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pop_time_line, parent, false);
+            View headView = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_line_item, parent, false);
             return new HeadViewHolder(headView);
         } else if (viewType == BODY_TYPE) {
-            View bodyView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pop_photo, parent, false);
+            View bodyView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_item, parent, false);
             return new BodyViewHolder(bodyView);
         } else {
             Log.d(TAG, "onCreateViewHolder: wrong type!");
@@ -113,7 +121,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 e.printStackTrace();
             }
 
-            ((BodyViewHolder)holder).photo.setImageBitmap(bitmap);
+            //((BodyViewHolder)holder).photo.setImageBitmap(bitmap);
         } else if (holder instanceof HeadViewHolder) {
 
             Log.d(TAG, "onBindViewHolder: head position = " + position);
@@ -125,10 +133,14 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
+
+
     @Override
     public int getItemCount() {
         return mItemList.size();
     }
+
+
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -145,7 +157,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     if (type == HEAD_TYPE) {
                         return 3;
                     } else if (type == BODY_TYPE) {
-                        Log.d(TAG, "getSpanSize:body " + 3);
                         return 1;
                     } else {
                         return 0;
@@ -153,6 +164,8 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             });
         }
+
+
     }
 
     public void updateAdapterList(List<MediaInfoBean> list) {
@@ -173,5 +186,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
-
+    public List<MediaInfoBean> getmItemList() {
+        return mItemList;
+    }
 }

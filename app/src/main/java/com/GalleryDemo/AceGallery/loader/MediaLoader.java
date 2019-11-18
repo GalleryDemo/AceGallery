@@ -25,12 +25,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class MediaLoader_Uri implements LoaderManager.LoaderCallbacks {
+public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
     private Context mContext;
     private MediaLoadDataCallBack loadDataCallBack;
 
-    public MediaLoader_Uri(Context context, MediaLoadDataCallBack loadDataCallBack) {
+    public MediaLoader(Context context, MediaLoadDataCallBack loadDataCallBack) {
         this.mContext = context;
         this.loadDataCallBack = loadDataCallBack;
     }

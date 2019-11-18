@@ -8,12 +8,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.GalleryDemo.AceGallery.ItemDividerDecoration;
+import com.GalleryDemo.AceGallery.GridItemDividerDecoration;
 import com.GalleryDemo.AceGallery.MediaLoadDataCallBack;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
-import com.GalleryDemo.AceGallery.loader.MediaLoader_Uri;
+import com.GalleryDemo.AceGallery.loader.MediaLoader;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,7 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
         mRecyclerView = findViewById(R.id.photo_recycler_view);
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mRecyclerView.addItemDecoration(new ItemDividerDecoration(this, mTimeLineAdapter));
+        mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
 
         mRecyclerView.setAdapter(mTimeLineAdapter);
 
@@ -57,7 +57,7 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
         mToolbar.setNavigationIcon(R.drawable.left_sidebar);
 
 
-        getSupportLoaderManager().initLoader(0, null, new MediaLoader_Uri(this, this));
+        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
 
 
     }

@@ -18,6 +18,8 @@ public class PhotoItemLayout extends RelativeLayout {
         super(context, attrs, defStyleAttr);
     }
 
+
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(getDefaultSize(0, widthMeasureSpec), getDefaultSize(0, heightMeasureSpec));

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/submenu"
-        android:icon="@drawable/submenu_normal"
+        android:icon="@drawable/more_button"
         android:title="submenu"
         app:showAsAction="ifRoom" />
 

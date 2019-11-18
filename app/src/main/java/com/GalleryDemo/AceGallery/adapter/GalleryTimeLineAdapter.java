@@ -64,11 +64,21 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public class BodyViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView photo;
+        public ImageView mPhoto;
+        public ImageView mFavorImage;
+        public TextView mPhotoDate;
+        public TextView mPhotoLocation;
+        public ImageView mMediaType;
+        public ImageView mMoreButton;
 
         public BodyViewHolder(View itemView) {
             super(itemView);
-            photo =itemView.findViewById(R.id.photo_image);
+            mPhoto = itemView.findViewById(R.id.photo_image);
+            mFavorImage = itemView.findViewById(R.id.favor_tiny);
+            //mPhotoDate = itemView.findViewById(R.id.media_date_tiny);
+            //mPhotoLocation = itemView.findViewById(R.id.media_location_tiny);
+            mMediaType = itemView.findViewById(R.id.media_type_tiny);
+            mMoreButton = itemView.findViewById(R.id.more_button_tiny);
         }
     }
 
@@ -121,7 +131,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 e.printStackTrace();
             }
 
-            //((BodyViewHolder)holder).photo.setImageBitmap(bitmap);
+            ((BodyViewHolder)holder).mPhoto.setImageBitmap(bitmap);
         } else if (holder instanceof HeadViewHolder) {
 
             Log.d(TAG, "onBindViewHolder: head position = " + position);

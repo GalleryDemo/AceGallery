@@ -1,3 +1,10 @@
+/**
+ * @author Lumpy
+ * @date 2019.11.14
+ * @version 1.0
+ *
+ */
+
 package com.GalleryDemo.AceGallery.ui;
 
 import android.os.Bundle;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.GalleryDemo.AceGallery.MyLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -14,4 +14,4 @@
     </ImageView>
 
 
-</RelativeLayout>
+</com.GalleryDemo.AceGallery.MyLayout>

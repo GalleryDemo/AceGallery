@@ -1,7 +1,6 @@
 package com.GalleryDemo.AceGallery.ui;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.GalleryDemo.AceGallery.ItemDividerDecoration;
 import com.GalleryDemo.AceGallery.MediaLoadDataCallBack;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
@@ -48,6 +48,7 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
         mRecyclerView = findViewById(R.id.photo_recycler_view);
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mRecyclerView.addItemDecoration(new ItemDividerDecoration(this, mTimeLineAdapter));
 
         mRecyclerView.setAdapter(mTimeLineAdapter);
 

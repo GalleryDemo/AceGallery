@@ -11,7 +11,9 @@ package com.GalleryDemo.AceGallery.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,8 +77,8 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(itemView);
             mPhoto = itemView.findViewById(R.id.photo_image);
             mFavorImage = itemView.findViewById(R.id.favor_tiny);
-            //mPhotoDate = itemView.findViewById(R.id.media_date_tiny);
-            //mPhotoLocation = itemView.findViewById(R.id.media_location_tiny);
+            mPhotoDate = itemView.findViewById(R.id.media_date_tiny);
+            mPhotoLocation = itemView.findViewById(R.id.media_location_tiny);
             mMediaType = itemView.findViewById(R.id.media_type_tiny);
             mMoreButton = itemView.findViewById(R.id.more_button_tiny);
         }
@@ -105,22 +107,22 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: list size = " + mItemList.size());
 
-        if (holder instanceof BodyViewHolder) {
-            Log.d(TAG, "onBindViewHolder: body position = " + position);
+        MediaInfoBean bean = mItemList.get(position);
 
-            if (mItemList.get(position).getMediaLocation()[0] != 0 || mItemList.get(position).getMediaLocation()[1] != 0) {
+        if (holder instanceof HeadViewHolder) {
+
+            ((HeadViewHolder)holder).time_line.setText(bean .getMediaDate());
+
+        } else if (holder instanceof BodyViewHolder) {
+
+            if (bean.getMediaLocation()[0] != 0 || bean.getMediaLocation()[1] != 0) {
                 new Thread(new Latlong2Address(mItemList, position)).start();
             }
 
+            final BodyViewHolder bodyHolder = (BodyViewHolder)holder;
 
-            Log.d(TAG, "onBindViewHolder: list(" + position + ").MediaId = " + mItemList.get(position).getMediaId());
-
-            MediaInfoBean mediaInfoBean = mItemList.get(position);
-            Uri imageUri = mediaInfoBean.getMediaUri();
-
-            Log.d(TAG, "onBindViewHolder: Uri = " + imageUri.toString());
+            Uri imageUri = bean.getMediaUri();
 
             Bitmap bitmap = null;
             try {
@@ -131,12 +133,27 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 e.printStackTrace();
             }
 
-            ((BodyViewHolder)holder).mPhoto.setImageBitmap(bitmap);
-        } else if (holder instanceof HeadViewHolder) {
+            bodyHolder.mPhoto.setImageBitmap(bitmap);
 
-            Log.d(TAG, "onBindViewHolder: head position = " + position);
-            ((HeadViewHolder)holder).time_line.setText(mItemList.get(position).getMediaDate());
-            /*((HeadViewHolder)holder).time_line.setText("fuck you");*/
+            bodyHolder.mPhotoDate.setText(bean.getMediaDate());
+
+            bodyHolder.mPhotoLocation.setText(bean.getMediaAddress());
+
+            Log.d(TAG, "onBindViewHolder: MediaType = " + bean.getMediaType());
+            if (bean.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
+                bodyHolder.mMediaType.setVisibility(View.VISIBLE);
+            } else {
+                bodyHolder.mMediaType.setVisibility(View.INVISIBLE);
+            }
+
+            bodyHolder.mFavorImage.setImageResource(R.drawable.favor);
+            bodyHolder.mFavorImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bodyHolder.mFavorImage.setColorFilter(Color.RED);
+                }
+            });
+
         }
 
 

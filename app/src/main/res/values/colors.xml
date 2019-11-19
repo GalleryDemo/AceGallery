@@ -5,5 +5,8 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="colorGalleryBlack">#000000</color>
+    <color name="colorGalleryDeepGary">#696969</color>
+    <color name="colorGalleryWeekBlack">#292421</color>
+    <color name="colorGalleryWhite">#FFFFFF</color>
 
 </resources>

@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.GalleryDemo.AceGallery.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.Latlong2Address;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
@@ -124,7 +125,34 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             Uri imageUri = bean.getMediaUri();
 
-            Bitmap bitmap = null;
+            Log.d(TAG, "onBindViewHolder: Uri = " + imageUri.toString());
+            ((BodyViewHolder) holder).mPhoto.setTag(imageUri.toString());
+            Log.d(TAG, "onBindViewHolder: " + imageUri.toString());
+            String string= ((BodyViewHolder) holder).mPhoto.getTag().toString();
+            Log.d(TAG, "onBindViewHolder: " + string);
+
+            Bitmap bitmap = AlbumBitmapCacheHelper.getInstance(mContext).getBitmap(imageUri, mItemList.get(position).getMediaWidth(),
+                    mItemList.get(position).getMediaHeight(), ((BodyViewHolder) holder).mPhoto,  new AlbumBitmapCacheHelper.ILoadImageCallback() {
+                        @Override
+                        public void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView) {
+                            if (bitmap == null) {
+                                return;
+                            }
+                            if (imageView.getTag().equals(uri.toString())) {
+                                imageView.setImageBitmap(bitmap);
+                            }
+                            /*View view = LayoutInflater.from(mContext).inflate(R.layout.pop_photo, null);
+                            ImageView imageView = (ImageView) view.findViewWithTag(uri.toString());
+                            if (imageView != null) {
+                                imageView.setImageBitmap(bitmap);
+                            }*/
+                        }
+                    });
+            if (bitmap != null) {
+                ((BodyViewHolder) holder).mPhoto.setImageBitmap(bitmap);
+            }
+
+            /*Bitmap bitmap = null;
             try {
                 InputStream imageStream = mContext.getContentResolver().openInputStream(imageUri);
                 bitmap = BitmapFactory.decodeStream(imageStream);
@@ -133,7 +161,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 e.printStackTrace();
             }
 
-            bodyHolder.mPhoto.setImageBitmap(bitmap);
+            bodyHolder.mPhoto.setImageBitmap(bitmap);*/
 
             bodyHolder.mPhotoDate.setText(bean.getMediaDate());
 

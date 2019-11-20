@@ -24,7 +24,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+
+
 public class MediaLoader implements LoaderManager.LoaderCallbacks {
+
+    private static final String TAG = "MediaLoader";
 
     private Context mContext;
     private MediaLoadDataCallBack loadDataCallBack;
@@ -121,8 +125,10 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
 
         allMediaInfo.add(new MediaInfoBean(2, imageCount, videoCount));
+        Log.d(TAG, "onLoadFinished: " + "list.size =" + allMediaInfo.size());
 
         loadDataCallBack.onData(allMediaInfo);
+
 
     }
 

@@ -1,9 +1,9 @@
-package com.GalleryDemo.AceGallery;
+package com.GalleryDemo.AceGallery.Utils;
 
 import android.app.Application;
 import android.content.Context;
 
-public class MyApplication extends Application {
+public class ApplicationContextUtils extends Application {
     private static Context mContext;
 
     public static Context getContext() {

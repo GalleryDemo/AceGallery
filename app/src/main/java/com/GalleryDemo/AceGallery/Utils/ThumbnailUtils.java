@@ -7,17 +7,16 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.GalleryDemo.AceGallery.MyApplication;
 
 public class ThumbnailUtils {
     private static final String TAG = "ThumbnailUtils";
     public static String getDataPath() {
         String path;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            path = MyApplication.getContext().getExternalFilesDir(null) + "/Gallery";
+            path = ApplicationContextUtils.getContext().getExternalFilesDir(null) + "/Gallery";
         }
         else
-            path = MyApplication.getContext().getFilesDir().getPath();
+            path = ApplicationContextUtils.getContext().getFilesDir().getPath();
         if (!path.endsWith("/")) {
             path = path + "/";
         }

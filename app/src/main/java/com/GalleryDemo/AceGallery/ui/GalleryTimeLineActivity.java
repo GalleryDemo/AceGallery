@@ -8,12 +8,11 @@
 package com.GalleryDemo.AceGallery.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,18 +24,23 @@ import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class GalleryTimeLineActivity extends AppCompatActivity implements MediaLoadDataCallBack {
+public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDataCallBack {
 
+    private static final String TAG = "GalleryTimeLineActivity";
+
+    private static final String path = "1";
+    
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private GalleryTimeLineAdapter mTimeLineAdapter;
 
+    private List<MediaInfoBean> mItemList = new ArrayList<>();
 
     private final static int HEAD_TYPE = 0;
     private final static int BODY_TYPE = 1;
     private final static int FOOT_TYPE = 2;
-
 
 
     @Override
@@ -50,21 +54,46 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_time_line_activity);
 
-        mRecyclerView = findViewById(R.id.photo_recycler_view);
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.left_sidebar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mToolbar.setNavigationIcon(R.drawable.left_sidebar_touched);
-            }
-        });
-
-        initData();
+       initView(savedInstanceState);
+       initData();
 
     }
 
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause: ");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume: ");
+        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart: ");
+        super.onStart();
+        
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop: ");
+        super.onStop();
+    }
+
+
+
+    @Override
     protected void initData() {
         mTimeLineAdapter = new GalleryTimeLineAdapter(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
@@ -86,7 +115,19 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
         });
         mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
         mRecyclerView.setAdapter(mTimeLineAdapter);
-        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
+        //getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
+
+        mItemList = mTimeLineAdapter.getItemList();
+    }
+
+
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        mRecyclerView = findViewById(R.id.photo_recycler_view);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.left_sidebar);
     }
 
     @Override
@@ -104,4 +145,12 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
         }
         return true;
     }
+
+/*    public void serializableSave (View view) {
+        ObjectOutputStream fos = null;
+        try {
+            File file = new File(File.pathSeparator);
+        }
+
+    }*/
 }

@@ -10,6 +10,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="popupMenuStyle">@style/PopUpMenuStyle</item>
 
     </style>
+
+    <style name="PopUpMenuStyle" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@color/colorGalleryWeekBlack</item>
+    </style>
+
 </resources>

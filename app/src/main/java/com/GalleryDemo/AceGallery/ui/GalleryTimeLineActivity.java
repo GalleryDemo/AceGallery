@@ -9,13 +9,15 @@ package com.GalleryDemo.AceGallery.ui;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.GalleryDemo.AceGallery.GridItemDividerDecoration;
 import com.GalleryDemo.AceGallery.MediaLoadDataCallBack;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
@@ -31,6 +33,10 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
     private GalleryTimeLineAdapter mTimeLineAdapter;
 
 
+    private final static int HEAD_TYPE = 0;
+    private final static int BODY_TYPE = 1;
+    private final static int FOOT_TYPE = 2;
+
 
 
     @Override
@@ -44,29 +50,43 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_time_line_activity);
 
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        mTimeLineAdapter = new GalleryTimeLineAdapter(this);
-
         mRecyclerView = findViewById(R.id.photo_recycler_view);
-
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
-
-        mRecyclerView.setAdapter(mTimeLineAdapter);
-
-
-        mToolbar =findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.left_sidebar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mToolbar.setNavigationIcon(R.drawable.left_sidebar_touched);
+            }
+        });
 
+        initData();
 
+    }
+
+    protected void initData() {
+        mTimeLineAdapter = new GalleryTimeLineAdapter(this);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                int type = mTimeLineAdapter.getItemViewType(position);
+                if (type == HEAD_TYPE) {
+                    return 3;
+                } else if (type == BODY_TYPE) {
+                    return 1;
+                } else if (type == FOOT_TYPE) {
+                    return 3;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
+        mRecyclerView.setAdapter(mTimeLineAdapter);
         getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
-
-
     }
 
     @Override
@@ -77,5 +97,11 @@ public class GalleryTimeLineActivity extends AppCompatActivity implements MediaL
     }
 
 
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.submenu) {
+        }
+        return true;
+    }
 }

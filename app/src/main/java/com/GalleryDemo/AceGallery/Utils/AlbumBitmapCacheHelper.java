@@ -1,11 +1,10 @@
-package com.GalleryDemo.AceGallery;
+package com.GalleryDemo.AceGallery.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.util.LruCache;
@@ -19,8 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -82,13 +79,13 @@ public class AlbumBitmapCacheHelper {
             public void run() {
                 File picFile = null;
                 Bitmap bitmap = null;
-                int screenWidthMetrics = MyUtils.getScreenMetrics(mContext).widthPixels / 3;
+                int screenWidthMetrics = ThumbnailUtils.getScreenMetrics(mContext).widthPixels / 3;
                 //创建存储缩略图路径
-                File file = new File(MyUtils.getDataPath());
+                File file = new File(ThumbnailUtils.getDataPath());
                 if (!file.exists()) {
                     file.mkdir();
                 }
-                String tempPath = MyUtils.getDataPath() + MyUtils.getFileName(uri.toString()) + ".jpg";
+                String tempPath = ThumbnailUtils.getDataPath() + ThumbnailUtils.getFileName(uri.toString()) + ".jpg";
 
                 picFile = new File(uri.toString());
 
@@ -108,7 +105,7 @@ public class AlbumBitmapCacheHelper {
                     }
                     int test = options.outWidth / screenWidthMetrics;
                     int test11 = options.outWidth;
-                    int test2 = MyUtils.getScreenMetrics(mContext).widthPixels / 3;
+                    int test2 = ThumbnailUtils.getScreenMetrics(mContext).widthPixels / 3;
                     Log.d(TAG, "run: " + test + test2 + test11);
                     int sample = (int) options.outWidth > options.outHeight ? options.outHeight / screenWidthMetrics
                             : options.outWidth / screenWidthMetrics;
@@ -129,11 +126,11 @@ public class AlbumBitmapCacheHelper {
 
                     if (bitmap != null) {
                         if (bitmap.getHeight() >= screenWidthMetrics && bitmap.getWidth() >= screenWidthMetrics ) {
-                            bitmap = MyUtils.centerSquareScaleBitmap(bitmap, screenWidthMetrics);
+                            bitmap = ThumbnailUtils.centerSquareScaleBitmap(bitmap, screenWidthMetrics);
                         }
                         else {
                             int length = bitmap.getHeight() > bitmap.getWidth() ? bitmap.getWidth() : bitmap.getHeight();
-                            bitmap = MyUtils.centerSquareScaleBitmap(bitmap, length);
+                            bitmap = ThumbnailUtils.centerSquareScaleBitmap(bitmap, length);
                         }
 
                     }

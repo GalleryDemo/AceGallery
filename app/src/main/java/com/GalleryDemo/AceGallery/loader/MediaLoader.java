@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -53,6 +52,9 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
         ArrayList<MediaInfoBean> allMediaInfo = new ArrayList<>(); //创建列表存储文件信息类
         long lastTime = 0;
 
+        int videoCount = 0;
+        int imageCount = 0;
+
 
         Cursor mCursor = (Cursor) data; //接收返回的cursor
         while (mCursor.moveToNext()) {
@@ -97,9 +99,12 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             String mediaDate = LoaderUtils.time2Date(mediaTime);//日期long转String
 
             MediaInfoBean photoInfo = new MediaInfoBean(mediaUri, mediaName, mediaDate, mediaType, mediaHeight, mediaWidth, latLong, 1);//添加media item
-            if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO) {
+            if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 long duration = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
                 photoInfo.setVideoDuration(LoaderUtils.stringForTime(duration));
+                ++videoCount;
+            } else {
+                ++imageCount;
             }
 
             boolean isSameDay = LoaderUtils.isSameDay(lastTime, mediaTime);
@@ -113,6 +118,9 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             Log.d(photoInfo.getMediaDate(), "onLoadFinished");
 
         }
+
+
+        allMediaInfo.add(new MediaInfoBean(2, imageCount, videoCount));
 
         loadDataCallBack.onData(allMediaInfo);
 

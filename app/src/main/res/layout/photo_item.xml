@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.GalleryDemo.AceGallery.PhotoItemLayout
+<com.GalleryDemo.AceGallery.ui.PhotoItemLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,109 +8,111 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <ImageView
+        android:id="@+id/photo_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
 
-        <ImageView
-            android:id="@+id/photo_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></ImageView>
+    <ImageView
+        android:id="@+id/info_bar_tiny"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:alpha="0.85"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/photo_image"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@color/colorGalleryWeekBlack" />
 
-        <ImageView
-            android:id="@+id/info_bar_tiny"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:alpha="0.85"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photo_image"
-            app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@color/colorGalleryWeekBlack" />
+    <ImageView
+        android:id="@+id/favor_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.85"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="@id/info_bar_tiny"
+        app:layout_constraintStart_toStartOf="@id/info_bar_tiny"
+        app:layout_constraintTop_toTopOf="@id/info_bar_tiny"
+        app:srcCompat="@drawable/favor" />
 
-        <ImageView
-            android:id="@+id/favor_tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.85"
-            android:scaleType="center"
-            app:layout_constraintBottom_toBottomOf="@id/info_bar_tiny"
-            app:layout_constraintStart_toStartOf="@id/info_bar_tiny"
-            app:layout_constraintTop_toTopOf="@id/info_bar_tiny"
-            app:srcCompat="@drawable/favor" />
-
-        <ImageView
-            android:id="@+id/media_type_tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:alpha="0.60"
-            app:layout_constraintBottom_toTopOf="@id/info_bar_tiny"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/media_type_tiny" />
-
-        <ImageView
-            android:id="@+id/photo_type_tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/info_bar_tiny"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/video_length_tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.85"
-            app:layout_constraintBottom_toTopOf="@+id/info_bar_tiny"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <ImageView
+        android:id="@+id/media_type_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="center"
+        android:alpha="0.60"
+        app:layout_constraintBottom_toTopOf="@id/info_bar_tiny"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/media_type_tiny" />
 
 
-        <TextView
-            android:id="@+id/media_date_tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:alpha="0.85"
-            android:text="2019.11.11"
-            android:textSize="10sp"
-            app:layout_constraintStart_toEndOf="@+id/favor_tiny"
-            app:layout_constraintTop_toTopOf="@+id/info_bar_tiny" />
-
-        <TextView
-            android:id="@+id/media_location_tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:alpha="0.85"
-            android:text="earth"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/info_bar_tiny"
-            app:layout_constraintStart_toEndOf="@+id/favor_tiny" />
-
-        <ImageView
-            android:id="@+id/more_button_tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:alpha="0.85"
-            android:scaleType="center"
-            android:src="@drawable/more_button_tiny"
-            app:layout_constraintBottom_toBottomOf="@+id/info_bar_tiny"
-            app:layout_constraintEnd_toEndOf="@+id/photo_image"
-            app:layout_constraintTop_toTopOf="@id/info_bar_tiny" />
+    <TextView
+        android:id="@+id/photo_type_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:textSize="9sp"
+        app:layout_constraintBottom_toTopOf="@+id/info_bar_tiny"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
+    <TextView
+        android:id="@+id/video_length_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:textSize="9sp"
+        android:alpha="0.85"
+        app:layout_constraintBottom_toTopOf="@+id/info_bar_tiny"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/media_date_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:alpha="0.85"
+        android:textSize="8sp"
+        app:layout_constraintStart_toEndOf="@+id/favor_tiny"
+        app:layout_constraintTop_toTopOf="@+id/info_bar_tiny" />
+
+    <TextView
+        android:id="@+id/media_location_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:alpha="0.85"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_bar_tiny"
+        app:layout_constraintStart_toEndOf="@+id/favor_tiny" />
+
+    <ImageView
+        android:id="@+id/more_button_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:alpha="0.85"
+        android:scaleType="center"
+        android:src="@drawable/more_button_tiny"
+        app:layout_constraintBottom_toBottomOf="@+id/info_bar_tiny"
+        app:layout_constraintEnd_toEndOf="@+id/photo_image"
+        app:layout_constraintTop_toTopOf="@id/info_bar_tiny" />
 
 
-</com.GalleryDemo.AceGallery.PhotoItemLayout>
+
+
+
+
+
+</com.GalleryDemo.AceGallery.ui.PhotoItemLayout>

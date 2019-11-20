@@ -15,11 +15,20 @@ public class MediaInfoBean implements Serializable {
     private int mediaWidth;
     private float[] mediaLocation;
     private String mediaAddress;
-    private int dataType; //文件数据类型，0表示日期数据， 1表示media数据
+    private int dataType; //文件数据类型，0表示日期数据， 1表示media数据 2表示末尾统计数据
+
+    private int imageCount;
+    private int videoCount;
 
     public MediaInfoBean(int dataType, String mediaDate) {
         this.dataType = dataType;
         this.mediaDate = mediaDate;
+    }
+
+    public MediaInfoBean(int dataType, int imageCount, int videoCount) {
+        this.dataType = dataType;
+        this.imageCount = imageCount;
+        this.videoCount = videoCount;
     }
 
     public MediaInfoBean(Uri mediaUri, String mediaName, String mediaDate, int mediaType, int mediaHeight, int mediaWidth, float[] mediaLocation, int dataType) {
@@ -77,6 +86,14 @@ public class MediaInfoBean implements Serializable {
         this.dataType = dataType;
     }
 
+    public void setImageCount(int imageCount) {
+        this.imageCount = imageCount;
+    }
+
+    public void setVideoCount(int videoCount) {
+        this.videoCount = videoCount;
+    }
+
     public int getDataType() {
         return dataType;
     }
@@ -97,7 +114,7 @@ public class MediaInfoBean implements Serializable {
         return mediaDate;
     }
 
-    public String getvideoDuration() {
+    public String getVideoDuration() {
         return videoDuration;
     }
 
@@ -119,5 +136,13 @@ public class MediaInfoBean implements Serializable {
 
     public String getMediaAddress() {
         return mediaAddress;
+    }
+
+    public int getImageCount() {
+        return imageCount;
+    }
+
+    public int getVideoCount() {
+        return videoCount;
     }
 }

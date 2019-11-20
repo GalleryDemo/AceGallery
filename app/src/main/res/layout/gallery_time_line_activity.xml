@@ -16,16 +16,12 @@
         android:background="@color/colorGalleryWeekBlack"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/photo_recycler_view"/>
-
-
-
 
 </LinearLayout>
 

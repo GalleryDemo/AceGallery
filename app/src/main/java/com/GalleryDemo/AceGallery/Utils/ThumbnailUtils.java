@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery;
+package com.GalleryDemo.AceGallery.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,8 +7,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
-public class MyUtils {
-    private static final String TAG = "MyUtils";
+import com.GalleryDemo.AceGallery.MyApplication;
+
+public class ThumbnailUtils {
+    private static final String TAG = "ThumbnailUtils";
     public static String getDataPath() {
         String path;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {

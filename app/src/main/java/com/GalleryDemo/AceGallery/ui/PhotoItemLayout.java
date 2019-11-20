@@ -1,10 +1,11 @@
-package com.GalleryDemo.AceGallery;
+package com.GalleryDemo.AceGallery.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
 
-public class PhotoItemLayout extends RelativeLayout {
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+public class PhotoItemLayout extends ConstraintLayout {
 
     public PhotoItemLayout(Context context) {
         super(context);

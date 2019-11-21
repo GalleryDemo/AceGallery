@@ -20,9 +20,6 @@ public class MediaInfoBean implements Serializable {
     private int imageCount;
     private int videoCount;
 
-
-
-
     public MediaInfoBean(int dataType, String mediaDate) {
         this.dataType = dataType;
         this.mediaDate = mediaDate;
@@ -34,8 +31,8 @@ public class MediaInfoBean implements Serializable {
         this.videoCount = videoCount;
     }
 
-    public MediaInfoBean(String mediaStringUri, String mediaName, String mediaDate, int mediaType, int mediaHeight, int mediaWidth, float[] mediaLocation, int dataType) {
-        this.mediaStringUri = mediaStringUri;
+    public MediaInfoBean(Uri mediaStringUri, String mediaName, String mediaDate, int mediaType, int mediaHeight, int mediaWidth, float[] mediaLocation, int dataType) {
+        this.mediaStringUri = mediaStringUri.toString();
         this.mediaName = mediaName;
         this.mediaDate = mediaDate;
         this.mediaType = mediaType;
@@ -52,7 +49,6 @@ public class MediaInfoBean implements Serializable {
     public void setMediaStringUri(Uri mediaStringUri) {
         this.mediaStringUri = mediaStringUri.toString();
     }
-
 
     public void setMediaName(String mediaName) {
         this.mediaName = mediaName;

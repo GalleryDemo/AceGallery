@@ -30,7 +30,9 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".ui.PreviewActivity"></activity>
+        <activity android:name=".ui.PreviewActivity">
+
+        </activity>
 
 
     </application>

@@ -28,8 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
+import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
 import com.GalleryDemo.AceGallery.ui.MediaLocationTiny;
 import com.GalleryDemo.AceGallery.ui.PreviewActivity;
@@ -40,8 +40,6 @@ import java.util.List;
 public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "GalleryTimeLineAdapter";
-
-    private static final int PAGER_POSITION = 1;
 
     private Context mContext;
 
@@ -80,16 +78,16 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public TextView mVideoLength;
         public TextView mPhotoType;
 
+
         public BodyViewHolder(final View itemView) {
             super(itemView);
-
-
             mPhoto = itemView.findViewById(R.id.photo_image);
             mPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = PreviewActivity.newIntent(mContext, index, mItemList, 200);
                     mContext.startActivity(intent);
+
                 }
             });
             mFavorImage = itemView.findViewById(R.id.favor_tiny);
@@ -100,7 +98,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(getContext(),itemView);
+                    PopupMenu popupMenu = new PopupMenu(getmContext(),itemView);
                     final MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.item_time_line, popupMenu.getMenu());
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -109,10 +107,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                             switch (item.getItemId()) {
                                 case R.id.delete:
-                                    Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getmContext(), "Delete", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.exit:
-                                    Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getmContext(), "退出", Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
                                     break;
@@ -150,6 +148,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+
         if (viewType == HEAD_TYPE) {
             View headView = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_line_item, parent, false);
             return new HeadViewHolder(headView);
@@ -174,9 +173,8 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         MediaInfoBean bean = mItemList.get(position);
-        item = bean;
         index = position;
-
+        item = bean;
 
         Log.d(TAG, "onBindViewHolder: position = " + position + ", ViewType = " + getItemViewType(position));
 
@@ -225,6 +223,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             bodyHolder.mPhotoDate.setText(bean.getMediaDate());
             bodyHolder.mPhotoLocation.setText(bean.getMediaAddress());
 
+            //Log.d(TAG, "onBindViewHolder: MediaType = " + bean.getMediaType());
             if (bean.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 bodyHolder.mMediaType.setVisibility(View.VISIBLE);
                 bodyHolder.mPhotoType.setVisibility(View.INVISIBLE);
@@ -270,14 +269,14 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 headList.add(i);
             }
         }
-        this.mHeadPositionList = headList;
+       this.mHeadPositionList = headList;
     }
 
     public List<MediaInfoBean> getItemList() {
         return mItemList;
     }
 
-    public Context getContext() {
+    public Context getmContext() {
         return mContext;
     }
 }

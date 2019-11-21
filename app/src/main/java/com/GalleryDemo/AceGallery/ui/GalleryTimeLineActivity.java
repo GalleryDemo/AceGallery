@@ -30,12 +30,11 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
 
     private static final String TAG = "GalleryTimeLineActivity";
 
-    private static final int PREVIEW_REQUEST = 200;
+    private static final String path = "1";
     
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private GalleryTimeLineAdapter mTimeLineAdapter;
-
 
     private List<MediaInfoBean> mItemList = new ArrayList<>();
 
@@ -53,7 +52,7 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery_time_line);
+        setContentView(R.layout.gallery_time_line_activity);
 
        initView(savedInstanceState);
        initData();
@@ -97,7 +96,6 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
     @Override
     protected void initData() {
         mTimeLineAdapter = new GalleryTimeLineAdapter(this);
-
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -117,7 +115,7 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
         });
         mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
         mRecyclerView.setAdapter(mTimeLineAdapter);
-        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
+        //getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
 
         mItemList = mTimeLineAdapter.getItemList();
     }
@@ -148,7 +146,11 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
         return true;
     }
 
-    public void startPreviewActivity(int position, List<MediaInfoBean> list) {
-        PreviewActivity.startActivity(this, position, list, PREVIEW_REQUEST);
-    }
+/*    public void serializableSave (View view) {
+        ObjectOutputStream fos = null;
+        try {
+            File file = new File(File.pathSeparator);
+        }
+
+    }*/
 }

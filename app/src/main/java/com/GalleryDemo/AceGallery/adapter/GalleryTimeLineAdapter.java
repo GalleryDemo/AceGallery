@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.R;
-import com.GalleryDemo.AceGallery.Utils.Latlong2Address;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
+import com.GalleryDemo.AceGallery.ui.MediaLocationTiny;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,11 +170,15 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         } else if (holder instanceof BodyViewHolder) {
 
+            final BodyViewHolder bodyHolder = (BodyViewHolder)holder;
+
             if (bean.getMediaLocation()[0] != 0 || bean.getMediaLocation()[1] != 0) {
-                new Thread(new Latlong2Address(mItemList, position)).start();
+                MediaLocationTiny.setAddress(mContext, bean.getMediaId(), bean.getMediaLocation()[0], bean.getMediaLocation()[1], bodyHolder.mPhotoLocation);
+            }
+            else {
+                bodyHolder.mPhotoLocation.setText("");
             }
 
-            final BodyViewHolder bodyHolder = (BodyViewHolder)holder;
             Uri imageUri = bean.getMediaUri();
 
             Log.d(TAG, "onBindViewHolder: Uri = " + imageUri.toString());

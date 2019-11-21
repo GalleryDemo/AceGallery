@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -63,11 +64,13 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
         Cursor mCursor = (Cursor) data; //接收返回的cursor
         while (mCursor.moveToNext()) {
             //拼接获取多媒体资源的Uri
-            Uri mediaUri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"),
-                    mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID)));
+            int mediaId = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID));
+            Uri mediaUri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), mediaId + "");
+            Log.d(TAG, "onLoadFinished: " + mediaId);
+            Log.d(TAG, "onLoadFinished: " + mediaUri);
             //如果运行在android Q
             float[] latLong = new float[2]; //获取地理位置的经度纬度
-            if (BuildCompat.isAtLeastQ()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 //创建资源文件的输入流
                 try {
                     mediaUri = MediaStore.setRequireOriginal(mediaUri);
@@ -103,6 +106,7 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             String mediaDate = LoaderUtils.time2Date(mediaTime);//日期long转String
 
             MediaInfoBean photoInfo = new MediaInfoBean(mediaUri, mediaName, mediaDate, mediaType, mediaHeight, mediaWidth, latLong, 1);//添加media item
+            photoInfo.setMediaId(mediaId);
             if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 long duration = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
                 photoInfo.setVideoDuration(LoaderUtils.stringForTime(duration));

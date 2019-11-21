@@ -11,7 +11,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.os.BuildCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -105,7 +104,7 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
             String mediaDate = LoaderUtils.time2Date(mediaTime);//日期long转String
 
-            MediaInfoBean photoInfo = new MediaInfoBean(mediaUri, mediaName, mediaDate, mediaType, mediaHeight, mediaWidth, latLong, 1);//添加media item
+            MediaInfoBean photoInfo = new MediaInfoBean(mediaUri.toString(), mediaName, mediaDate, mediaType, mediaHeight, mediaWidth, latLong, 1);//添加media item
             photoInfo.setMediaId(mediaId);
             if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 long duration = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));

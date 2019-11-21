@@ -9,6 +9,7 @@
 package com.GalleryDemo.AceGallery.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -27,10 +28,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.R;
+import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
 import com.GalleryDemo.AceGallery.ui.MediaLocationTiny;
+import com.GalleryDemo.AceGallery.ui.PreviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +41,15 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private static final String TAG = "GalleryTimeLineAdapter";
 
+    private static final int PAGER_POSITION = 1;
+
     private Context mContext;
 
     private List<MediaInfoBean> mItemList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
+
+    private MediaInfoBean item;
+    private int index;
 
     public static final int HEAD_TYPE = 0;
     public static final int BODY_TYPE = 1;
@@ -75,7 +82,16 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public BodyViewHolder(final View itemView) {
             super(itemView);
+
+
             mPhoto = itemView.findViewById(R.id.photo_image);
+            mPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = PreviewActivity.newIntent(mContext, index, mItemList, 200);
+                    mContext.startActivity(intent);
+                }
+            });
             mFavorImage = itemView.findViewById(R.id.favor_tiny);
             mPhotoDate = itemView.findViewById(R.id.media_date_tiny);
             mPhotoLocation = itemView.findViewById(R.id.media_location_tiny);
@@ -84,7 +100,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(getmContext(),itemView);
+                    PopupMenu popupMenu = new PopupMenu(getContext(),itemView);
                     final MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.item_time_line, popupMenu.getMenu());
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -93,10 +109,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                             switch (item.getItemId()) {
                                 case R.id.delete:
-                                    Toast.makeText(getmContext(), "Delete", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.exit:
-                                    Toast.makeText(getmContext(), "退出", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
                                     break;
@@ -158,6 +174,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         MediaInfoBean bean = mItemList.get(position);
+        item = bean;
+        index = position;
+
+
         Log.d(TAG, "onBindViewHolder: position = " + position + ", ViewType = " + getItemViewType(position));
 
         if (holder instanceof HeadViewHolder) {
@@ -179,7 +199,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 bodyHolder.mPhotoLocation.setText("");
             }
 
-            Uri imageUri = bean.getMediaUri();
+            Uri imageUri = bean.getMediaStringUri();
 
             Log.d(TAG, "onBindViewHolder: Uri = " + imageUri.toString());
             bodyHolder.mPhoto.setTag(imageUri.toString());
@@ -205,7 +225,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             bodyHolder.mPhotoDate.setText(bean.getMediaDate());
             bodyHolder.mPhotoLocation.setText(bean.getMediaAddress());
 
-            //Log.d(TAG, "onBindViewHolder: MediaType = " + bean.getMediaType());
             if (bean.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 bodyHolder.mMediaType.setVisibility(View.VISIBLE);
                 bodyHolder.mPhotoType.setVisibility(View.INVISIBLE);
@@ -251,14 +270,14 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 headList.add(i);
             }
         }
-       this.mHeadPositionList = headList;
+        this.mHeadPositionList = headList;
     }
 
     public List<MediaInfoBean> getItemList() {
         return mItemList;
     }
 
-    public Context getmContext() {
+    public Context getContext() {
         return mContext;
     }
 }

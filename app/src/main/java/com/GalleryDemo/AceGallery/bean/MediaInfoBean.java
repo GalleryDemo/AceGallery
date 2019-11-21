@@ -5,7 +5,7 @@ import android.net.Uri;
 import java.io.Serializable;
 
 public class MediaInfoBean implements Serializable {
-    private Uri mediaUri;
+    private String mediaStringUri;
     private String mediaName;
     private String mediaDate;
     private int mediaType;
@@ -20,6 +20,9 @@ public class MediaInfoBean implements Serializable {
     private int imageCount;
     private int videoCount;
 
+
+
+
     public MediaInfoBean(int dataType, String mediaDate) {
         this.dataType = dataType;
         this.mediaDate = mediaDate;
@@ -31,8 +34,8 @@ public class MediaInfoBean implements Serializable {
         this.videoCount = videoCount;
     }
 
-    public MediaInfoBean(Uri mediaUri, String mediaName, String mediaDate, int mediaType, int mediaHeight, int mediaWidth, float[] mediaLocation, int dataType) {
-        this.mediaUri = mediaUri;
+    public MediaInfoBean(String mediaStringUri, String mediaName, String mediaDate, int mediaType, int mediaHeight, int mediaWidth, float[] mediaLocation, int dataType) {
+        this.mediaStringUri = mediaStringUri;
         this.mediaName = mediaName;
         this.mediaDate = mediaDate;
         this.mediaType = mediaType;
@@ -46,9 +49,10 @@ public class MediaInfoBean implements Serializable {
         this.mediaAddress = mediaAddress;
     }
 
-    public void setMediaUri(Uri mediaUri) {
-        this.mediaUri = mediaUri;
+    public void setMediaStringUri(Uri mediaStringUri) {
+        this.mediaStringUri = mediaStringUri.toString();
     }
+
 
     public void setMediaName(String mediaName) {
         this.mediaName = mediaName;
@@ -122,8 +126,8 @@ public class MediaInfoBean implements Serializable {
         return mediaLocation;
     }
 
-    public Uri getMediaUri() {
-        return mediaUri;
+    public Uri getMediaStringUri() {
+        return Uri.parse(mediaStringUri);
     }
 
     public String getMediaName() {

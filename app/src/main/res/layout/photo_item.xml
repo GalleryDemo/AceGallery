@@ -104,7 +104,7 @@
         android:layout_marginEnd="0dp"
         android:alpha="0.85"
         android:scaleType="center"
-        android:src="@drawable/more_button_tiny"
+        app:srcCompat="@drawable/more_button_tiny"
         app:layout_constraintBottom_toBottomOf="@+id/info_bar_tiny"
         app:layout_constraintEnd_toEndOf="@+id/photo_image"
         app:layout_constraintTop_toTopOf="@id/info_bar_tiny" />

@@ -45,8 +45,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private List<MediaInfoBean> mItemList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
+    private List<MediaInfoBean> mPhotoList = new ArrayList<>();
 
-    private MediaInfoBean item;
+    private MediaInfoBean bean;
     private int index;
 
     public static final int HEAD_TYPE = 0;
@@ -85,9 +86,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = PreviewActivity.newIntent(mContext, index, mItemList, 200);
+                    MediaInfoBean photoItem = mItemList.get(getAdapterPosition());
+                    Intent intent = PreviewActivity.newIntent(mContext, mPhotoList.indexOf(photoItem), mPhotoList, 200);
                     mContext.startActivity(intent);
-
                 }
             });
             mFavorImage = itemView.findViewById(R.id.favor_tiny);
@@ -172,9 +173,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        MediaInfoBean bean = mItemList.get(position);
+        bean = mItemList.get(position);
         index = position;
-        item = bean;
+
 
         Log.d(TAG, "onBindViewHolder: position = " + position + ", ViewType = " + getItemViewType(position));
 
@@ -265,8 +266,11 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             Log.d(TAG, "updateAdapterList: ItemList.size() = " + mItemList.size());
         }
         for (int i = 0;i < list.size(); i++) {
-            if (list.get(i).getDataType() == HEAD_TYPE) {
+            int holderType = list.get(i).getDataType();
+            if (holderType == HEAD_TYPE) {
                 headList.add(i);
+            } else if (holderType == BODY_TYPE) {
+                mPhotoList.add(mItemList.get(i));
             }
         }
        this.mHeadPositionList = headList;

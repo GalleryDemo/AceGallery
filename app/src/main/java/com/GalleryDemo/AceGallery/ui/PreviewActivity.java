@@ -1,6 +1,5 @@
 package com.GalleryDemo.AceGallery.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,14 +22,14 @@ public class PreviewActivity extends BaseActivity {
 
     private static final String TAG = "PreviewActivity";
 
-    private static final String EXTRA_PAGER_POSITION = "com.GalleryDemo.AceGallery.ui.PreviewActivity.mPosition";
+    private static final String EXTRA_PAGER_MEDIA_ID = "com.GalleryDemo.AceGallery.ui.PreviewActivity.mediaId";
     private static final String EXTRA_PHOTO_LIST = "com.GalleryDemo.AceGallery.ui.PreviewActivity.list";
 
 
     private Toolbar mToolbar;
 
     private ViewPager mViewPager;
-    private int mPosition = 0;
+    private int mMediaId = 0;
     private PhotoPagerAdapter mPhotoPagerAdapter;
     private List<MediaInfoBean> mPhotoList = new ArrayList<>();
 
@@ -38,17 +37,10 @@ public class PreviewActivity extends BaseActivity {
 
     public static Intent newIntent(Context context, int position, List<MediaInfoBean> list, int requestCode) {
         Intent intent = new Intent(context, PreviewActivity.class);
-        intent.putExtra(EXTRA_PAGER_POSITION,position);
+        intent.putExtra(EXTRA_PAGER_MEDIA_ID,position);
         intent.putExtra(EXTRA_PHOTO_LIST, (Serializable) list);
 
         return intent;
-    }
-
-    public static void startActivity(Activity activity, int position, List<MediaInfoBean> list, int requestCode) {
-        Intent intent = new Intent(activity, PreviewActivity.class);
-        intent.putExtra(EXTRA_PAGER_POSITION,position);
-        intent.putExtra(EXTRA_PHOTO_LIST, (Serializable) list);
-        activity.startActivityForResult(intent, requestCode);
     }
 
 
@@ -80,10 +72,10 @@ public class PreviewActivity extends BaseActivity {
         Intent intent = getIntent();
 
         mPhotoList = (List<MediaInfoBean>) intent.getSerializableExtra(EXTRA_PHOTO_LIST);
-        mPosition = intent.getIntExtra(EXTRA_PAGER_POSITION, 0);
+        mMediaId = intent.getIntExtra(EXTRA_PAGER_MEDIA_ID, 0);
         mPhotoPagerAdapter = new PhotoPagerAdapter(this, mPhotoList);
         mViewPager.setAdapter(mPhotoPagerAdapter);
-        mViewPager.setCurrentItem(mPosition);
+        mViewPager.setCurrentItem(mMediaId);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -92,7 +84,7 @@ public class PreviewActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Log.e(TAG, "onPageSelected: mPosition: " + position);
+                Log.e(TAG, "onPageSelected: mMediaId: " + position);
             }
 
             @Override
@@ -108,8 +100,6 @@ public class PreviewActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
-
 
 
 }

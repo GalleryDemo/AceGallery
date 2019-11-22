@@ -22,7 +22,9 @@ import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
+import com.GalleryDemo.AceGallery.ui.layout.GridItemDividerDecoration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,11 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
     private static final String TAG = "GalleryTimeLineActivity";
 
     private static final String path = "1";
-    
+
+
+
+
+
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private GalleryTimeLineAdapter mTimeLineAdapter;
@@ -61,15 +67,17 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
 
     @Override
     protected void onPause() {
-        Log.d(TAG, "onPause: ");
+
         super.onPause();
+        Log.d(TAG, "onPause: ");
     }
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "onResume: ");
+
         getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
         super.onResume();
+        Log.d(TAG, "onResume: ");
     }
 
     @Override
@@ -91,7 +99,18 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
         super.onStop();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("list", (Serializable) mItemList);
 
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mItemList = (List<MediaInfoBean>) savedInstanceState.getSerializable("list");
+    }
 
     @Override
     protected void initData() {
@@ -117,7 +136,7 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
         mRecyclerView.setAdapter(mTimeLineAdapter);
         //getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
 
-        mItemList = mTimeLineAdapter.getItemList();
+        Log.d(TAG, "initData: mItemList.size() = " + mItemList.size());
     }
 
 
@@ -146,11 +165,9 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
         return true;
     }
 
-/*    public void serializableSave (View view) {
-        ObjectOutputStream fos = null;
-        try {
-            File file = new File(File.pathSeparator);
-        }
 
-    }*/
+    public void getItemList(List <MediaInfoBean> list) {
+        mItemList = list;
+    }
+
 }

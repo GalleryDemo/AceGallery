@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
+import com.GalleryDemo.AceGallery.ui.GalleryTimeLineActivity;
 import com.GalleryDemo.AceGallery.ui.MediaLocationTiny;
 import com.GalleryDemo.AceGallery.ui.PreviewActivity;
 
@@ -54,8 +55,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public static final int BODY_TYPE = 1;
     public static final int FOOT_TYPE = 2;
 
-    public GalleryTimeLineAdapter(Context mContext) {
+    public GalleryTimeLineAdapter(GalleryTimeLineActivity mContext) {
         this.mContext = mContext;
+
     }
 
     public class HeadViewHolder extends RecyclerView.ViewHolder {
@@ -99,7 +101,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(getmContext(),itemView);
+                    PopupMenu popupMenu = new PopupMenu(getContext(),itemView);
                     final MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.item_time_line, popupMenu.getMenu());
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -108,10 +110,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                             switch (item.getItemId()) {
                                 case R.id.delete:
-                                    Toast.makeText(getmContext(), "Delete", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.exit:
-                                    Toast.makeText(getmContext(), "退出", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
                                     break;
@@ -274,13 +276,13 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
        this.mHeadPositionList = headList;
+        ((GalleryTimeLineActivity) this.mContext).getItemList(mItemList);
     }
 
-    public List<MediaInfoBean> getItemList() {
-        return mItemList;
-    }
 
-    public Context getmContext() {
+    public Context getContext() {
         return mContext;
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery.ui.layout;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -8,17 +8,17 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {AddressInfo.class}, version = 1,  exportSchema = false)
-public abstract class AddressDatabase extends RoomDatabase {
-    public abstract AddressDao getAddressDao();
+@Database(entities = {MediaInfo.class}, version = 1,  exportSchema = false)
+public abstract class MediaDatabase extends RoomDatabase {
+    public abstract MediaDao getAddressDao();
 
-    private static volatile AddressDatabase INSTANCE;
+    private static volatile MediaDatabase INSTANCE;
 
-    public static AddressDatabase getInstance(final Context context) {
+    public static MediaDatabase getInstance(final Context context) {
         if (INSTANCE == null) {
-            synchronized (AddressDatabase.class) {
+            synchronized (MediaDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AddressDatabase.class, "address_database")
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), MediaDatabase.class, "address_database")
                             .fallbackToDestructiveMigration()
                             .addCallback(new RoomDatabase.Callback(){
                                 @Override

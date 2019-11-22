@@ -7,9 +7,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.GalleryDemo.AceGallery.database.AddressDao;
-import com.GalleryDemo.AceGallery.database.AddressDatabase;
-import com.GalleryDemo.AceGallery.database.AddressInfo;
+import com.GalleryDemo.AceGallery.database.MediaDao;
+import com.GalleryDemo.AceGallery.database.MediaDatabase;
 
 import org.json.JSONObject;
 
@@ -31,14 +30,15 @@ public class MediaLocationTiny {
             }
         };
 
-        final AddressDao addressDao = AddressDatabase.getInstance(mContext).getAddressDao();
+        final MediaDao mediaDao = MediaDatabase.getInstance(mContext).getAddressDao();
         ThreadPoolExecutor tpe = new ThreadPoolExecutor(2, 5, 10, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
         tpe.execute(new Runnable() {
             @Override
             public void run() {
                 /*String CityAddress  = "";*/
-                String  CityAddress = addressDao.getAddress(id);
+                //Todo: fix the getAddress;
+                String  CityAddress = "test";
                 if (CityAddress == null) {
                     try {
                         OkHttpClient client = new OkHttpClient();
@@ -56,7 +56,8 @@ public class MediaLocationTiny {
                             JSONObject JsAddressComponent = new JSONObject(addressComponent);
                             String city = JsAddressComponent.getString("city");
                             CityAddress = city;
-                            addressDao.insertAddress(new AddressInfo(id, CityAddress));
+                            //Todo fix the method
+                            //mediaDao.insertAddress(new MediaInfo(id, CityAddress));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

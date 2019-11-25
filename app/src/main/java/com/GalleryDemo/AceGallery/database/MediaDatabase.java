@@ -8,9 +8,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {MediaInfo.class}, version = 1,  exportSchema = false)
+@Database(entities = {MediaInfoEntity.class}, version = 1,  exportSchema = false)
 public abstract class MediaDatabase extends RoomDatabase {
-    public abstract MediaDao getAddressDao();
+
+    public abstract MediaDao getMediaDao();
 
     private static volatile MediaDatabase INSTANCE;
 
@@ -24,6 +25,7 @@ public abstract class MediaDatabase extends RoomDatabase {
                                 @Override
                                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                                     super.onCreate(db);
+
                                 }
 
                                 @Override

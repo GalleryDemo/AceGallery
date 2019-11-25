@@ -1,8 +1,9 @@
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery.Utils;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MediaLocationTiny {
+public class LocationUtils {
+
+    private static final String TAG = "LocationUtils";
+
     public static void setAddress(Context mContext, final int id, final float lat, final float lng, final TextView textView) {
 
         final Handler handler = new Handler() {
@@ -30,7 +34,7 @@ public class MediaLocationTiny {
             }
         };
 
-        final MediaDao mediaDao = MediaDatabase.getInstance(mContext).getAddressDao();
+        final MediaDao mediaDao = MediaDatabase.getInstance(mContext).getMediaDao();
         ThreadPoolExecutor tpe = new ThreadPoolExecutor(2, 5, 10, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
         tpe.execute(new Runnable() {
@@ -55,6 +59,7 @@ public class MediaLocationTiny {
                             String addressComponent = JsResult.getString("addressComponent");
                             JSONObject JsAddressComponent = new JSONObject(addressComponent);
                             String city = JsAddressComponent.getString("city");
+                            Log.d(TAG, "run: " + city);
                             CityAddress = city;
                             mediaDao.updateAddress(id, CityAddress);
                         }

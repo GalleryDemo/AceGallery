@@ -14,9 +14,11 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.GalleryDemo.AceGallery.MediaInfoViewModel;
 import com.GalleryDemo.AceGallery.MediaLoadDataCallBack;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
@@ -32,15 +34,10 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
 
     private static final String TAG = "GalleryTimeLineActivity";
 
-    private static final String path = "1";
-
-
-
-
-
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private GalleryTimeLineAdapter mTimeLineAdapter;
+    private MediaInfoViewModel mVeiwModel;
 
     private List<MediaInfoBean> mItemList = new ArrayList<>();
 
@@ -75,7 +72,6 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
     @Override
     protected void onResume() {
 
-        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
         super.onResume();
         Log.d(TAG, "onResume: ");
     }
@@ -134,7 +130,7 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
         });
         mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
         mRecyclerView.setAdapter(mTimeLineAdapter);
-        //getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
+        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
 
         Log.d(TAG, "initData: mItemList.size() = " + mItemList.size());
     }
@@ -143,6 +139,13 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mVeiwModel = ViewModelProviders.of(this).get(MediaInfoViewModel.class);
+/*        mVeiwModel.getAllItems().observe(this, new Observer<List<MediaInfoEntity>>() {
+            @Override
+            public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
+                mTimeLineAdapter.notifyDataSetChanged();
+            }
+        });*/
         mRecyclerView = findViewById(R.id.photo_recycler_view);
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

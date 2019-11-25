@@ -3,28 +3,26 @@ package com.GalleryDemo.AceGallery.Utils;
 import android.app.Application;
 import android.content.Context;
 
-import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
-import com.GalleryDemo.AceGallery.bean.MediaInfoLab;
-
-import java.util.List;
 
 public class ApplicationContextUtils extends Application {
 
-    private static Context mContext;
+    private static Context sContext;
 
-    private static MediaInfoLab sMediaInfoLab;
-
-    private List<MediaInfoBean> mMediaInfoBeanList;
-
+    private static Application sApplication;
 
     public static Context getContext() {
-        return mContext;
+        return sContext;
+    }
+
+    public static Application getInstance(){
+        return  sApplication;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = getApplicationContext();
+        sContext = getApplicationContext();
+        sApplication = this;
     }
 
 

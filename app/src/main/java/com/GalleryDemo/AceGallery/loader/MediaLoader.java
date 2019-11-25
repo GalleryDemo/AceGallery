@@ -11,14 +11,17 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.os.BuildCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import com.GalleryDemo.AceGallery.MediaLoadDataCallBack;
+import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 import com.GalleryDemo.AceGallery.Utils.LoaderUtils;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
+import com.GalleryDemo.AceGallery.bean.MediaInfoRepository;
+import com.GalleryDemo.AceGallery.database.MediaDao;
+import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,6 +36,8 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
     private Context mContext;
     private MediaLoadDataCallBack loadDataCallBack;
+    private MediaDao mediaDao;
+    private MediaInfoRepository mRepository;
 
     public MediaLoader(Context context, MediaLoadDataCallBack loadDataCallBack) {
         this.mContext = context;
@@ -55,6 +60,10 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
     @Override
     public void onLoadFinished(@NonNull Loader loader, Object data) {
         ArrayList<MediaInfoBean> allMediaInfo = new ArrayList<>(); //创建列表存储文件信息类
+        mRepository = new MediaInfoRepository(ApplicationContextUtils.getInstance());
+
+        final ArrayList<MediaInfoEntity> mediaInfoEntityData = new ArrayList<>();
+
         long lastTime = 0;
 
         int videoCount = 0;
@@ -106,6 +115,12 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             String mediaDate = LoaderUtils.time2Date(mediaTime);//日期long转String
 
             MediaInfoBean photoInfo = new MediaInfoBean(mediaUri, mediaName, mediaDate, mediaType, mediaHeight, mediaWidth, latLong, 1);//添加media item
+
+            mRepository.insertItem(new MediaInfoEntity(mediaId, null, mediaUri.toString(), mediaName,
+                    mediaDate, mediaType, null, mediaHeight,
+                    mediaHeight, 1, 0, 0));
+
+
             photoInfo.setMediaId(mediaId);
             if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 long duration = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
@@ -118,6 +133,15 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             boolean isSameDay = LoaderUtils.isSameDay(lastTime, mediaTime);
             if (!isSameDay) {
                 allMediaInfo.add(new MediaInfoBean(0, mediaDate));//添加日期item
+
+/*                int mediaId, String mediaAddress, String mediaStringUri, String mediaName,
+                        String mediaDate, int mediaType, String videoDuration, int mediaHeight,
+                int mediaWidth, int dataType, int imageCount, int videoCount*/
+
+                mRepository.insertItem(new MediaInfoEntity(mediaId, null, null, null,
+                        mediaDate, 0, null, 0,
+                        0, 0, 0, 0));
+
                 lastTime = mediaTime;
             }
 
@@ -129,7 +153,11 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
 
         allMediaInfo.add(new MediaInfoBean(2, imageCount, videoCount));
+
+        Log.d(TAG, "onLoadFinished: testlist" + mediaInfoEntityData.size());
         Log.d(TAG, "onLoadFinished: " + "list.size =" + allMediaInfo.size());
+
+
 
         loadDataCallBack.onData(allMediaInfo);
 

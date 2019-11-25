@@ -28,11 +28,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.R;
+import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
+import com.GalleryDemo.AceGallery.Utils.LocationUtils;
 import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
+import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.ui.GalleryTimeLineActivity;
-import com.GalleryDemo.AceGallery.ui.MediaLocationTiny;
 import com.GalleryDemo.AceGallery.ui.PreviewActivity;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private Context mContext;
 
     private List<MediaInfoBean> mItemList = new ArrayList<>();
+    private List<MediaInfoEntity> mTestList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
     private List<MediaInfoBean> mPhotoList = new ArrayList<>();
 
@@ -194,7 +196,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             final BodyViewHolder bodyHolder = (BodyViewHolder)holder;
 
             if (bean.getMediaLocation()[0] != 0 || bean.getMediaLocation()[1] != 0) {
-                MediaLocationTiny.setAddress(mContext, bean.getMediaId(), bean.getMediaLocation()[0], bean.getMediaLocation()[1], bodyHolder.mPhotoLocation);
+                LocationUtils.setAddress(mContext, bean.getMediaId(), bean.getMediaLocation()[0], bean.getMediaLocation()[1], bodyHolder.mPhotoLocation);
             }
             else {
                 bodyHolder.mPhotoLocation.setText("");
@@ -277,6 +279,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
        this.mHeadPositionList = headList;
         ((GalleryTimeLineActivity) this.mContext).getItemList(mItemList);
+        Log.d(TAG, "updateAdapterList: mTestList size" + mTestList.size());
     }
 
 

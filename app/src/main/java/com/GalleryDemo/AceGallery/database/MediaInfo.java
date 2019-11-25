@@ -44,6 +44,24 @@ public class MediaInfo {
     @ColumnInfo(name = "video_count")
     public int videoCount;
 
+    public MediaInfo(int mediaId, String mediaAddress, String mediaStringUri, String mediaName,
+                     String mediaDate, int mediaType, String videoDuration, int mediaHeight,
+                     int mediaWidth, int dataType, int imageCount, int videoCount) {
+        this.mediaId = mediaId;
+        this.mediaAddress = mediaAddress;
+        this.mediaStringUri = mediaStringUri;
+        this.mediaName = mediaName;
+        this.mediaDate = mediaDate;
+        this.mediaType = mediaType;
+        this.videoDuration = videoDuration;
+        this.mediaHeight = mediaHeight;
+        this.mediaWidth = mediaWidth;
+        this.dataType = dataType;
+        this.imageCount = imageCount;
+        this.videoCount = videoCount;
+    }
 }
+
+
 
 

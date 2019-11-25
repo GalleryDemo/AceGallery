@@ -37,8 +37,8 @@ public class MediaLocationTiny {
             @Override
             public void run() {
                 /*String CityAddress  = "";*/
-                //Todo: fix the getAddress;
-                String  CityAddress = "test";
+
+                String  CityAddress = mediaDao.getAddress(id);
                 if (CityAddress == null) {
                     try {
                         OkHttpClient client = new OkHttpClient();
@@ -56,8 +56,7 @@ public class MediaLocationTiny {
                             JSONObject JsAddressComponent = new JSONObject(addressComponent);
                             String city = JsAddressComponent.getString("city");
                             CityAddress = city;
-                            //Todo fix the method
-                            //mediaDao.insertAddress(new MediaInfo(id, CityAddress));
+                            mediaDao.updateAddress(id, CityAddress);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

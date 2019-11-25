@@ -32,13 +32,6 @@ public class ThumbnailUtils {
         } else {
             return null;
         }
-        /*int start = pathName.lastIndexOf("/");
-        int end = pathName.lastIndexOf(".");
-        if (start != -1 && end != -1) {
-            return pathName.substring(start + 1, end);
-        } else {
-            return null;
-        }*/
     }
 
     public static DisplayMetrics getScreenMetrics(Context context) {

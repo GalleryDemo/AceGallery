@@ -26,6 +26,7 @@ public abstract class MediaDatabase extends RoomDatabase {
                                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                                     super.onCreate(db);
 
+
                                 }
 
                                 @Override

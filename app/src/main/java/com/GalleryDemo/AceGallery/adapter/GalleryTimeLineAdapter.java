@@ -30,8 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
-import com.GalleryDemo.AceGallery.Utils.LocationUtils;
-import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.ui.GalleryTimeLineActivity;
 import com.GalleryDemo.AceGallery.ui.PreviewActivity;
@@ -45,12 +43,12 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private Context mContext;
 
-    private List<MediaInfoBean> mItemList = new ArrayList<>();
+    private List<MediaInfoEntity> mItemList = new ArrayList<>();
     private List<MediaInfoEntity> mTestList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
-    private List<MediaInfoBean> mPhotoList = new ArrayList<>();
+    private List<MediaInfoEntity> mPhotoList = new ArrayList<>();
 
-    private MediaInfoBean bean;
+    private MediaInfoEntity bean;
     private int index;
 
     public static final int HEAD_TYPE = 0;
@@ -90,7 +88,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaInfoBean photoItem = mItemList.get(getAdapterPosition());
+                    MediaInfoEntity photoItem = mItemList.get(getAdapterPosition());
                     Intent intent = PreviewActivity.newIntent(mContext, mPhotoList.indexOf(photoItem), mPhotoList, 200);
                     mContext.startActivity(intent);
                 }
@@ -194,15 +192,16 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } else if (holder instanceof BodyViewHolder) {
 
             final BodyViewHolder bodyHolder = (BodyViewHolder)holder;
+            //todo:fix the location float[2];
 
-            if (bean.getMediaLocation()[0] != 0 || bean.getMediaLocation()[1] != 0) {
+/*            if (bean.getMediaLocation()[0] != 0 || bean.getMediaLocation()[1] != 0) {
                 LocationUtils.setAddress(mContext, bean.getMediaId(), bean.getMediaLocation()[0], bean.getMediaLocation()[1], bodyHolder.mPhotoLocation);
             }
             else {
                 bodyHolder.mPhotoLocation.setText("");
-            }
+            }*/
 
-            Uri imageUri = bean.getMediaStringUri();
+            Uri imageUri = Uri.parse(bean.mediaStringUri);
 
             Log.d(TAG, "onBindViewHolder: Uri = " + imageUri.toString());
             bodyHolder.mPhoto.setTag(imageUri.toString());
@@ -262,7 +261,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public void updateAdapterList(List<MediaInfoBean> list) {
+    public void setAdapterList(List<MediaInfoEntity> list) {
         List<Integer> headList = new ArrayList<>();
         if (list != null) {
             this.mItemList = list;
@@ -278,8 +277,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
        this.mHeadPositionList = headList;
-        ((GalleryTimeLineActivity) this.mContext).getItemList(mItemList);
-        Log.d(TAG, "updateAdapterList: mTestList size" + mTestList.size());
     }
 
 

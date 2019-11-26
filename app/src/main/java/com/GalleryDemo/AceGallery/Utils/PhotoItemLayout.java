@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.ui.layout;
+package com.GalleryDemo.AceGallery.Utils;
 
 import android.content.Context;
 import android.util.AttributeSet;

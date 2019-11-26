@@ -1,14 +1,10 @@
-package com.GalleryDemo.AceGallery.bean;
+package com.GalleryDemo.AceGallery.database;
 
 import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-
-import com.GalleryDemo.AceGallery.database.MediaDao;
-import com.GalleryDemo.AceGallery.database.MediaDatabase;
-import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

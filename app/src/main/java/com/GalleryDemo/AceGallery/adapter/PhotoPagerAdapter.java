@@ -15,7 +15,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
-import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
+import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.ui.view.VideoSurfaceView;
 import com.GalleryDemo.AceGallery.ui.view.ZoomImageView;
 
@@ -28,10 +28,10 @@ public class PhotoPagerAdapter extends PagerAdapter {
     private static final String TAG = "PhotoPagerAdapter";
 
     private Context mContext;
-    private List<MediaInfoBean> mPagerList;
+    private List<MediaInfoEntity> mPagerList;
 
 
-    public PhotoPagerAdapter(Context context, List<MediaInfoBean> pagerList) {
+    public PhotoPagerAdapter(Context context, List<MediaInfoEntity> pagerList) {
         this.mContext = context;
         this.mPagerList = pagerList;
     }
@@ -80,7 +80,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.widget_zoom_image, null);
         final ZoomImageView zoomImageView = view.findViewById(R.id.photoImage);
         Log.d(TAG, "instantiateItem: position = " + position);
-        Uri photoUri = mPagerList.get(position).getMediaStringUri();
+        Uri photoUri = Uri.parse(mPagerList.get(position).mediaStringUri);
         Bitmap bitmap = null;
         try {
             InputStream inputStream = mContext.getContentResolver().openInputStream(photoUri);

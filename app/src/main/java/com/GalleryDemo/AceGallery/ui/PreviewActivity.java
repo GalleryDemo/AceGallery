@@ -11,7 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.adapter.PhotoPagerAdapter;
-import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
+import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,11 +31,11 @@ public class PreviewActivity extends BaseActivity {
     private ViewPager mViewPager;
     private int mMediaId = 0;
     private PhotoPagerAdapter mPhotoPagerAdapter;
-    private List<MediaInfoBean> mPhotoList = new ArrayList<>();
+    private List<MediaInfoEntity> mPhotoList = new ArrayList<>();
 
 
 
-    public static Intent newIntent(Context context, int position, List<MediaInfoBean> list, int requestCode) {
+    public static Intent newIntent(Context context, int position, List<MediaInfoEntity> list, int requestCode) {
         Intent intent = new Intent(context, PreviewActivity.class);
         intent.putExtra(EXTRA_PAGER_MEDIA_ID,position);
         intent.putExtra(EXTRA_PHOTO_LIST, (Serializable) list);
@@ -71,7 +71,7 @@ public class PreviewActivity extends BaseActivity {
     protected void initData() {
         Intent intent = getIntent();
 
-        mPhotoList = (List<MediaInfoBean>) intent.getSerializableExtra(EXTRA_PHOTO_LIST);
+        mPhotoList = (List<MediaInfoEntity>) intent.getSerializableExtra(EXTRA_PHOTO_LIST);
         mMediaId = intent.getIntExtra(EXTRA_PAGER_MEDIA_ID, 0);
         mPhotoPagerAdapter = new PhotoPagerAdapter(this, mPhotoList);
         mViewPager.setAdapter(mPhotoPagerAdapter);

@@ -14,41 +14,36 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.GalleryDemo.AceGallery.MediaInfoViewModel;
-import com.GalleryDemo.AceGallery.MediaLoadDataCallBack;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
-import com.GalleryDemo.AceGallery.bean.MediaInfoBean;
+import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
-import com.GalleryDemo.AceGallery.ui.layout.GridItemDividerDecoration;
+import com.GalleryDemo.AceGallery.Utils.GridItemDividerDecoration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDataCallBack {
+public class GalleryTimeLineActivity extends BaseActivity {
 
     private static final String TAG = "GalleryTimeLineActivity";
 
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private GalleryTimeLineAdapter mTimeLineAdapter;
-    private MediaInfoViewModel mVeiwModel;
+    private MediaInfoViewModel mViewModel;
 
-    private List<MediaInfoBean> mItemList = new ArrayList<>();
+    private List<MediaInfoEntity> mItemList = new ArrayList<>();
 
     private final static int HEAD_TYPE = 0;
     private final static int BODY_TYPE = 1;
     private final static int FOOT_TYPE = 2;
-
-
-    @Override
-    public void onData(ArrayList<MediaInfoBean> list) {
-        mTimeLineAdapter.updateAdapterList(list);
-    }
 
 
     @Override
@@ -102,13 +97,21 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mItemList = (List<MediaInfoBean>) savedInstanceState.getSerializable("list");
-    }
-
-    @Override
     protected void initData() {
+        mViewModel = ViewModelProviders.of(this).get(MediaInfoViewModel.class);
+        try {
+            mViewModel.getAllItems().observe(this, new Observer<List<MediaInfoEntity>>() {
+                @Override
+                public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
+                    mTimeLineAdapter.setAdapterList(mediaInfoEntities);
+                }
+            });
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         mTimeLineAdapter = new GalleryTimeLineAdapter(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -129,7 +132,7 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
         });
         mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
         mRecyclerView.setAdapter(mTimeLineAdapter);
-        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this, this));
+        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this));
 
         Log.d(TAG, "initData: mItemList.size() = " + mItemList.size());
     }
@@ -138,20 +141,7 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        //mVeiwModel = ViewModelProviders.of(this).get(MediaInfoViewModel.class);
-/*        try {
-            List<MediaInfoEntity> list = mVeiwModel.getAllItems().getValue();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-/*        mVeiwModel.getAllItems().observe(this, new Observer<List<MediaInfoEntity>>() {
-            @Override
-            public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
-                mTimeLineAdapter.notifyDataSetChanged();
-            }
-        });*/
+
         mRecyclerView = findViewById(R.id.photo_recycler_view);
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -175,7 +165,7 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
     }
 
 
-    public void getItemList(List <MediaInfoBean> list) {
+    public void getItemList(List <MediaInfoEntity> list) {
         mItemList = list;
     }
 

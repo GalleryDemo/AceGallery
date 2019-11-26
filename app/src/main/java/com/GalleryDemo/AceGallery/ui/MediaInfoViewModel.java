@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery;
+package com.GalleryDemo.AceGallery.ui;
 
 import android.app.Application;
 
@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.GalleryDemo.AceGallery.bean.MediaInfoRepository;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
+import com.GalleryDemo.AceGallery.database.MediaInfoRepository;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

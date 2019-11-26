@@ -26,7 +26,7 @@ public interface MediaDao {
     void delete(int mediaId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertItem(MediaInfoEntity item);
+    long insertItem(MediaInfoEntity item);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllItem(List<MediaInfoEntity> items);

@@ -27,7 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
+import java.util.concurrent.ExecutionException;
 
 
 public class MediaLoader implements LoaderManager.LoaderCallbacks {
@@ -116,9 +116,23 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
             MediaInfoBean photoInfo = new MediaInfoBean(mediaUri, mediaName, mediaDate, mediaType, mediaHeight, mediaWidth, latLong, 1);//添加media item
 
-            mRepository.insertItem(new MediaInfoEntity(mediaId, null, mediaUri.toString(), mediaName,
+            MediaInfoEntity entity = new MediaInfoEntity(mediaId, null, mediaUri.toString(), mediaName,
                     mediaDate, mediaType, null, mediaHeight,
-                    mediaHeight, 1, 0, 0));
+                    mediaHeight, 1, 0, 0);
+            
+            //mRepository.insertItem(entity);
+
+            try {
+                if(mRepository.getItem(entity.mediaId) != null)
+                    Log.d(TAG, "onLoadFinished: " + mRepository.getItem(entity.mediaId));
+                else {
+                    Log.d(TAG, "onLoadFinished: fuck you, you god damn stupid db");
+                }
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
             photoInfo.setMediaId(mediaId);
@@ -138,9 +152,11 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
                         String mediaDate, int mediaType, String videoDuration, int mediaHeight,
                 int mediaWidth, int dataType, int imageCount, int videoCount*/
 
+/*
                 mRepository.insertItem(new MediaInfoEntity(mediaId, null, null, null,
                         mediaDate, 0, null, 0,
                         0, 0, 0, 0));
+*/
 
                 lastTime = mediaTime;
             }

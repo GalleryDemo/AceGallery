@@ -14,7 +14,6 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -139,7 +138,14 @@ public class GalleryTimeLineActivity extends BaseActivity implements MediaLoadDa
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mVeiwModel = ViewModelProviders.of(this).get(MediaInfoViewModel.class);
+        //mVeiwModel = ViewModelProviders.of(this).get(MediaInfoViewModel.class);
+/*        try {
+            List<MediaInfoEntity> list = mVeiwModel.getAllItems().getValue();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
 /*        mVeiwModel.getAllItems().observe(this, new Observer<List<MediaInfoEntity>>() {
             @Override
             public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {

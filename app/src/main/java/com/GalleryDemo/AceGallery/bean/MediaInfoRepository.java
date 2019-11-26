@@ -11,6 +11,7 @@ import com.GalleryDemo.AceGallery.database.MediaDatabase;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MediaInfoRepository {
 
@@ -32,14 +33,15 @@ public class MediaInfoRepository {
     }
 
     public LiveData<List<MediaInfoEntity>> getAllItems() {
-        new getAllItemsAsync(mMediaDao).execute();
-        return null;
+
+        return mMediaInfoList;
+        /*return new getAllItemsAsync(mMediaDao).execute().get();*/
+
     }
 
 
-    public MediaInfoEntity getItem(int mediaId) {
-        new getItemAsync(mMediaDao).execute(mediaId);
-        return null;
+    public MediaInfoEntity getItem(int mediaId) throws ExecutionException, InterruptedException {
+        return new getItemAsync(mMediaDao).execute(mediaId).get();
     }
 
     public void insertItem(MediaInfoEntity item) {
@@ -55,7 +57,7 @@ public class MediaInfoRepository {
         new deleteItemAsync(mMediaDao).execute(mediaId);
     }
 
-    private static class getAllItemsAsync extends AsyncTask<Void, Void, Void> {
+/*    private static class getAllItemsAsync extends AsyncTask<Void, Void, LiveData<List<MediaInfoEntity>>> {
         private MediaDao mMediaDaoAsync;
 
         getAllItemsAsync(MediaDao mediaDao) {
@@ -63,14 +65,14 @@ public class MediaInfoRepository {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected LiveData<List<MediaInfoEntity>> doInBackground(Void... voids) {
             mMediaDaoAsync.getAllItems();
             return null;
         }
-    }
+    }*/
 
 
-    private static class getItemAsync extends AsyncTask<Integer, Void, Void> {
+    private static class getItemAsync extends AsyncTask<Integer, Void, MediaInfoEntity> {
 
         private MediaDao mMediaDaoAsync;
 
@@ -79,13 +81,12 @@ public class MediaInfoRepository {
         }
 
         @Override
-        protected Void doInBackground(Integer... integers) {
-            mMediaDaoAsync.getItem(integers[0]);
-            return null;
+        protected MediaInfoEntity doInBackground(Integer... integers) {
+            return mMediaDaoAsync.getItem(integers[0]);
         }
     }
 
-    private static class insertItemAsync extends AsyncTask<MediaInfoEntity, Void, Void> {
+    private static class insertItemAsync extends AsyncTask<MediaInfoEntity, Void, Long> {
 
         private MediaDao mMediaDaoAsync;
 
@@ -94,9 +95,8 @@ public class MediaInfoRepository {
         }
 
         @Override
-        protected Void doInBackground(MediaInfoEntity... mediaInfoEntities) {
-            mMediaDaoAsync.insertItem(mediaInfoEntities[0]);
-            return null;
+        protected Long doInBackground(MediaInfoEntity... mediaInfoEntities) {
+            return mMediaDaoAsync.insertItem(mediaInfoEntities[0]);
         }
     }
 

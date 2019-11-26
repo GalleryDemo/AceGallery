@@ -10,6 +10,7 @@ import com.GalleryDemo.AceGallery.bean.MediaInfoRepository;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MediaInfoViewModel extends AndroidViewModel {
 
@@ -21,19 +22,23 @@ public class MediaInfoViewModel extends AndroidViewModel {
         this.mRepository = new MediaInfoRepository(application);
     }
 
-    public LiveData<List<MediaInfoEntity>> getAllItems() {
+    public LiveData<List<MediaInfoEntity>> getAllItems() throws ExecutionException, InterruptedException {
         if (items == null) {
             items = mRepository.getAllItems();
         }
         return items;
     }
 
-    public MediaInfoEntity getItem(int mediaId) {
+    public MediaInfoEntity getItem(int mediaId) throws ExecutionException, InterruptedException {
         return mRepository.getItem(mediaId);
     }
 
     public void insertAllItems(List<MediaInfoEntity> items) {
         mRepository.insertAllItems(items);
+    }
+
+    public void insertItem(MediaInfoEntity item) {
+        mRepository.insertItem(item);
     }
 
     public void deleteItem(int mediaId) {

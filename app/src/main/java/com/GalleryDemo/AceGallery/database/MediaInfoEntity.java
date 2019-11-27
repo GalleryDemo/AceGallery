@@ -7,46 +7,46 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "mediaInfoEntity")
 public class MediaInfoEntity {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "item_id")
+    private int item_id;
+
+
     @ColumnInfo(name = "media_id")
-    public int mediaId;
+    private int mediaId;
 
     @ColumnInfo(name = "media_address")
-    public String mediaAddress;
+    private String mediaAddress;
 
     @ColumnInfo(name = "media_string_uri")
-    public String mediaStringUri;
+    private String mediaStringUri;
 
     @ColumnInfo(name = "media_name")
-    public String mediaName;
+    private String mediaName;
 
     @ColumnInfo(name = "media_date")
-    public String mediaDate;
+    private String mediaDate;
 
     @ColumnInfo(name = "media_type")
-    public int mediaType;
+    private int mediaType;
 
     @ColumnInfo(name = "video_duration")
-    public String videoDuration;
+    private String videoDuration;
 
     @ColumnInfo(name = "media_height")
-    public int mediaHeight;
+    private int mediaHeight;
 
     @ColumnInfo(name = "media_width")
-    public int mediaWidth;
+    private int mediaWidth;
 
     @ColumnInfo(name = "data_type")
-    public int dataType;
+    private int dataType;
 
-    @ColumnInfo(name = "image_count")
-    public int imageCount;
 
-    @ColumnInfo(name = "video_count")
-    public int videoCount;
-
-    public MediaInfoEntity(int mediaId, String mediaAddress, String mediaStringUri, String mediaName,
+    public MediaInfoEntity(int item_id, int mediaId, String mediaAddress, String mediaStringUri, String mediaName,
                            String mediaDate, int mediaType, String videoDuration, int mediaHeight,
-                           int mediaWidth, int dataType, int imageCount, int videoCount) {
+                           int mediaWidth, int dataType) {
+        this.item_id = item_id;
         this.mediaId = mediaId;
         this.mediaAddress = mediaAddress;
         this.mediaStringUri = mediaStringUri;
@@ -57,8 +57,15 @@ public class MediaInfoEntity {
         this.mediaHeight = mediaHeight;
         this.mediaWidth = mediaWidth;
         this.dataType = dataType;
-        this.imageCount = imageCount;
-        this.videoCount = videoCount;
+    }
+
+
+    public int getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(int item_id) {
+        this.item_id = item_id;
     }
 
     public int getMediaId() {
@@ -141,21 +148,7 @@ public class MediaInfoEntity {
         this.dataType = dataType;
     }
 
-    public int getImageCount() {
-        return imageCount;
-    }
 
-    public void setImageCount(int imageCount) {
-        this.imageCount = imageCount;
-    }
-
-    public int getVideoCount() {
-        return videoCount;
-    }
-
-    public void setVideoCount(int videoCount) {
-        this.videoCount = videoCount;
-    }
 }
 
 

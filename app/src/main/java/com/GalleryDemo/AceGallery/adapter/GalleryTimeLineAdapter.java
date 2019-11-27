@@ -37,6 +37,10 @@ import com.GalleryDemo.AceGallery.ui.PreviewActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
+import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.FOOT_TYPE;
+import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.HEAD_TYPE;
+
 public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "GalleryTimeLineAdapter";
@@ -44,16 +48,13 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private Context mContext;
 
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
-    private List<MediaInfoEntity> mTestList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
     private List<MediaInfoEntity> mPhotoList = new ArrayList<>();
 
     private MediaInfoEntity bean;
     private int index;
 
-    public static final int HEAD_TYPE = 0;
-    public static final int BODY_TYPE = 1;
-    public static final int FOOT_TYPE = 2;
+
 
     public GalleryTimeLineAdapter(GalleryTimeLineActivity mContext) {
         this.mContext = mContext;
@@ -89,7 +90,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 @Override
                 public void onClick(View v) {
                     MediaInfoEntity photoItem = mItemList.get(getAdapterPosition());
-                    Intent intent = PreviewActivity.newIntent(mContext, mPhotoList.indexOf(photoItem), mPhotoList, 200);
+                    Intent intent = PreviewActivity.newIntent(mContext, photoItem.getMediaId(), 200);
                     mContext.startActivity(intent);
                 }
             });
@@ -187,7 +188,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         } else if (holder instanceof FootViewHolder) {
 
-            ((FootViewHolder)holder).mStatView.setText(bean.getImageCount() + " 张图片、" + bean.getVideoCount() + " 个视频");
+            ((FootViewHolder)holder).mStatView.setText("666 张图片、" + "666 个视频");
 
         } else if (holder instanceof BodyViewHolder) {
 
@@ -201,7 +202,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 bodyHolder.mPhotoLocation.setText("");
             }*/
 
-            Uri imageUri = Uri.parse(bean.mediaStringUri);
+            Uri imageUri = Uri.parse(bean.getMediaStringUri());
 
             Log.d(TAG, "onBindViewHolder: Uri = " + imageUri.toString());
             bodyHolder.mPhoto.setTag(imageUri.toString());
@@ -263,20 +264,31 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void setAdapterList(List<MediaInfoEntity> list) {
         List<Integer> headList = new ArrayList<>();
-        if (list != null) {
-            this.mItemList = list;
-            notifyDataSetChanged();
-            Log.d(TAG, "updateAdapterList: ItemList.size() = " + mItemList.size());
-        }
-        for (int i = 0;i < list.size(); i++) {
-            int holderType = list.get(i).getDataType();
-            if (holderType == HEAD_TYPE) {
-                headList.add(i);
-            } else if (holderType == BODY_TYPE) {
-                mPhotoList.add(mItemList.get(i));
+        String lastDate = null;
+        for (int i = 0;i < list.size();i ++) {
+            MediaInfoEntity item = list.get(i);
+            Log.d(TAG, "setAdapterList: mediaId = " + item.getMediaId() + " mediaDate = " + item.getMediaDate());
+            if (item.getDataType() == BODY_TYPE) {
+                if (item.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
+                    mPhotoList.add(item);
+                }
+                if (!item.getMediaDate().equals(lastDate)) {
+                    MediaInfoEntity timeLineItem = new MediaInfoEntity(0,
+                            0, null, null,
+                            null, item.getMediaDate(), 0,
+                            null, 0, 0, HEAD_TYPE);
+                    list.add(i, timeLineItem);
+
+                    lastDate = item.getMediaDate();
+                }
+            } else if (item.getDataType() == HEAD_TYPE) {
+                list.remove(i);
             }
         }
-       this.mHeadPositionList = headList;
+        this.mItemList = list;
+        notifyDataSetChanged();
+
+        this.mHeadPositionList = headList;
     }
 
 

@@ -6,6 +6,13 @@ import android.content.Context;
 
 public class ApplicationContextUtils extends Application {
 
+    public static final int HEAD_TYPE = 0;
+
+    public static final int BODY_TYPE = 1;
+
+    public static final int FOOT_TYPE = 2;
+
+
     private static Context sContext;
 
     private static Application sApplication;

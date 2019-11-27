@@ -21,6 +21,7 @@ import com.GalleryDemo.AceGallery.ui.view.ZoomImageView;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoPagerAdapter extends PagerAdapter {
@@ -28,19 +29,18 @@ public class PhotoPagerAdapter extends PagerAdapter {
     private static final String TAG = "PhotoPagerAdapter";
 
     private Context mContext;
-    private List<MediaInfoEntity> mPagerList;
+    private List<MediaInfoEntity> mPagerList = new ArrayList<>();
 
 
-    public PhotoPagerAdapter(Context context, List<MediaInfoEntity> pagerList) {
+    public PhotoPagerAdapter(Context context) {
         this.mContext = context;
-        this.mPagerList = pagerList;
     }
 
     @Override
     public int getCount() {
         return mPagerList.size();
-    }
 
+    }
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
@@ -52,7 +52,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         int mediaType = mPagerList.get(position).getMediaType();
         if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
-
+            Log.d(TAG, "instantiateItem: position = " + position);
             View videoView = instantiateVideoItem(position);
             container.addView(videoView);
             return videoView;
@@ -80,7 +80,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.widget_zoom_image, null);
         final ZoomImageView zoomImageView = view.findViewById(R.id.photoImage);
         Log.d(TAG, "instantiateItem: position = " + position);
-        Uri photoUri = Uri.parse(mPagerList.get(position).mediaStringUri);
+        Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
         Bitmap bitmap = null;
         try {
             InputStream inputStream = mContext.getContentResolver().openInputStream(photoUri);
@@ -99,5 +99,13 @@ public class PhotoPagerAdapter extends PagerAdapter {
     }
 
 
+    public void updateItemList(List<MediaInfoEntity> list) {
+        this.mPagerList = list;
+        notifyDataSetChanged();
+    }
 
+
+    public List<MediaInfoEntity> getPagerList() {
+        return mPagerList;
+    }
 }

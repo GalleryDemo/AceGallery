@@ -7,6 +7,7 @@
 
 package com.GalleryDemo.AceGallery.ui;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,15 +21,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
+import com.GalleryDemo.AceGallery.Utils.GridItemDividerDecoration;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
-import com.GalleryDemo.AceGallery.Utils.GridItemDividerDecoration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+
+import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
+import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.FOOT_TYPE;
+import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.HEAD_TYPE;
 
 public class GalleryTimeLineActivity extends BaseActivity {
 
@@ -41,9 +45,7 @@ public class GalleryTimeLineActivity extends BaseActivity {
 
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
 
-    private final static int HEAD_TYPE = 0;
-    private final static int BODY_TYPE = 1;
-    private final static int FOOT_TYPE = 2;
+    private static final int STORAGE_PERMISSION_REQUEST = 100;
 
 
     @Override
@@ -51,8 +53,14 @@ public class GalleryTimeLineActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_time_line_activity);
 
-       initView(savedInstanceState);
-       initData();
+/*        if (ContextCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission_group.STORAGE},
+                   STORAGE_PERMISSION_REQUEST);
+        }*/
+
+        initView(savedInstanceState);
+        initData();
 
     }
 
@@ -67,6 +75,7 @@ public class GalleryTimeLineActivity extends BaseActivity {
     protected void onResume() {
 
         super.onResume();
+        getSupportLoaderManager().restartLoader(0, null, new MediaLoader(this));
         Log.d(TAG, "onResume: ");
     }
 
@@ -99,18 +108,12 @@ public class GalleryTimeLineActivity extends BaseActivity {
     @Override
     protected void initData() {
         mViewModel = ViewModelProviders.of(this).get(MediaInfoViewModel.class);
-        try {
-            mViewModel.getAllItems().observe(this, new Observer<List<MediaInfoEntity>>() {
-                @Override
-                public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
-                    mTimeLineAdapter.setAdapterList(mediaInfoEntities);
-                }
-            });
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        mViewModel.getAllItems().observe(this, new Observer<List<MediaInfoEntity>>() {
+            @Override
+            public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
+                mTimeLineAdapter.setAdapterList(mediaInfoEntities);
+            }
+        });
 
         mTimeLineAdapter = new GalleryTimeLineAdapter(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
@@ -164,9 +167,15 @@ public class GalleryTimeLineActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case STORAGE_PERMISSION_REQUEST: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-    public void getItemList(List <MediaInfoEntity> list) {
-        mItemList = list;
+                }
+                return;
+            }
+        }
     }
-
 }

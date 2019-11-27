@@ -17,15 +17,18 @@ public class MediaInfoViewModel extends AndroidViewModel {
     private MediaInfoRepository mRepository;
     private LiveData<List<MediaInfoEntity>> items;
 
+    private LiveData<List<MediaInfoEntity>> timeLineItems;
+
     public MediaInfoViewModel(@NonNull Application application) {
         super(application);
         this.mRepository = new MediaInfoRepository(application);
     }
 
-    public LiveData<List<MediaInfoEntity>> getAllItems() throws ExecutionException, InterruptedException {
+    public LiveData<List<MediaInfoEntity>> getAllItems() {
         if (items == null) {
             items = mRepository.getAllItems();
         }
+
         return items;
     }
 

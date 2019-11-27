@@ -10,7 +10,7 @@ import java.util.List;
 
 @Dao
 public interface MediaDao {
-    @Query("SELECT * FROM MediaInfoEntity")
+    @Query("SELECT * FROM MediaInfoEntity ORDER BY media_date DESC, media_id DESC")
     LiveData<List<MediaInfoEntity>> getAllItems();
 
     @Query("SELECT media_address FROM MediaInfoEntity WHERE media_id = :mediaID")

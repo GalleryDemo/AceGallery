@@ -7,22 +7,17 @@
 
 package com.GalleryDemo.AceGallery.ui;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.GalleryDemo.AceGallery.R;
-import com.GalleryDemo.AceGallery.Utils.GridItemDividerDecoration;
-import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
 
@@ -30,18 +25,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
-import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.FOOT_TYPE;
-import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.HEAD_TYPE;
-
 public class GalleryTimeLineActivity extends BaseActivity {
 
     private static final String TAG = "GalleryTimeLineActivity";
 
-    private Toolbar mToolbar;
-    private RecyclerView mRecyclerView;
-    private GalleryTimeLineAdapter mTimeLineAdapter;
-    private MediaInfoViewModel mViewModel;
+
 
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
 
@@ -51,16 +39,19 @@ public class GalleryTimeLineActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gallery_time_line_activity);
-
-/*        if (ContextCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE)
-                == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission_group.STORAGE},
-                   STORAGE_PERMISSION_REQUEST);
-        }*/
+        setContentView(R.layout.activity_gallery);
 
         initView(savedInstanceState);
         initData();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
+        if (fragment == null) {
+            fragment = new GalleryTimeLineFragment();
+            fragmentManager.beginTransaction().add(R.id.fragment_container, fragment)
+                    .commit();
+        }
+
 
     }
 
@@ -107,37 +98,7 @@ public class GalleryTimeLineActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mViewModel = ViewModelProviders.of(this).get(MediaInfoViewModel.class);
-        mViewModel.getAllItems().observe(this, new Observer<List<MediaInfoEntity>>() {
-            @Override
-            public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
-                mTimeLineAdapter.setAdapterList(mediaInfoEntities);
-            }
-        });
 
-        mTimeLineAdapter = new GalleryTimeLineAdapter(this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                int type = mTimeLineAdapter.getItemViewType(position);
-                if (type == HEAD_TYPE) {
-                    return 3;
-                } else if (type == BODY_TYPE) {
-                    return 1;
-                } else if (type == FOOT_TYPE) {
-                    return 3;
-                } else {
-                    return 0;
-                }
-            }
-        });
-        mRecyclerView.addItemDecoration(new GridItemDividerDecoration(this, mTimeLineAdapter));
-        mRecyclerView.setAdapter(mTimeLineAdapter);
-        getSupportLoaderManager().initLoader(0, null, new MediaLoader(this));
-
-        Log.d(TAG, "initData: mItemList.size() = " + mItemList.size());
     }
 
 
@@ -145,10 +106,6 @@ public class GalleryTimeLineActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
 
-        mRecyclerView = findViewById(R.id.photo_recycler_view);
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.left_sidebar);
     }
 
     @Override
@@ -167,15 +124,17 @@ public class GalleryTimeLineActivity extends BaseActivity {
         return true;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case STORAGE_PERMISSION_REQUEST: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                }
-                return;
-            }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        Log.d(TAG, "onKeyDown: stackCount = " + getSupportFragmentManager().getBackStackEntryCount());
+        if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
+            finish();
+        } else {
+            getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
+
         }
+        return true;
     }
 }

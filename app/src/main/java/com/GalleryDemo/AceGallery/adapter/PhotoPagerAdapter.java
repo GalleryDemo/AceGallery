@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
+
 public class PhotoPagerAdapter extends PagerAdapter {
 
     private static final String TAG = "PhotoPagerAdapter";
@@ -46,6 +48,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
         return view == object;
 
     }
+
+
 
 
     @Override
@@ -100,7 +104,12 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
 
     public void updateItemList(List<MediaInfoEntity> list) {
-        this.mPagerList = list;
+        for (int i = 0;i < list.size();i ++) {
+            MediaInfoEntity item = list.get(i);
+            if (item.getDataType() == BODY_TYPE) {
+                this.mPagerList.add(item);
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -108,4 +117,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
     public List<MediaInfoEntity> getPagerList() {
         return mPagerList;
     }
+
+
+
 }

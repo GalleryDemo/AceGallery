@@ -9,7 +9,6 @@
 package com.GalleryDemo.AceGallery.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -31,8 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
-import com.GalleryDemo.AceGallery.ui.GalleryTimeLineActivity;
-import com.GalleryDemo.AceGallery.ui.PreviewActivity;
+import com.GalleryDemo.AceGallery.ui.GalleryTimeLineFragment;
+import com.GalleryDemo.AceGallery.ui.PreviewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +45,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final String TAG = "GalleryTimeLineAdapter";
 
     private Context mContext;
+    private GalleryTimeLineFragment fragment;
 
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
@@ -56,8 +56,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
 
-    public GalleryTimeLineAdapter(GalleryTimeLineActivity mContext) {
+    public GalleryTimeLineAdapter(Context mContext, GalleryTimeLineFragment fragment) {
         this.mContext = mContext;
+        this.fragment = fragment;
 
     }
 
@@ -90,8 +91,13 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 @Override
                 public void onClick(View v) {
                     MediaInfoEntity photoItem = mItemList.get(getAdapterPosition());
-                    Intent intent = PreviewActivity.newIntent(mContext, photoItem.getMediaId(), 200);
-                    mContext.startActivity(intent);
+                    PreviewFragment previewFragment = PreviewFragment.newInstance(photoItem);
+
+                    fragment.getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.fragment_container, previewFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
             mFavorImage = itemView.findViewById(R.id.favor_tiny);
@@ -160,7 +166,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             View bodyView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_item, parent, false);
             return new BodyViewHolder(bodyView);
         } else if (viewType == FOOT_TYPE) {
-            Log.d(TAG, "onCreateViewHolder: FootViewCreated!");
             View footView = LayoutInflater.from(parent.getContext()).inflate(R.layout.statistics_bottom_item, parent, false);
             return new FootViewHolder(footView);
         } else {
@@ -178,9 +183,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         bean = mItemList.get(position);
         index = position;
-
-
-        Log.d(TAG, "onBindViewHolder: position = " + position + ", ViewType = " + getItemViewType(position));
 
         if (holder instanceof HeadViewHolder) {
 
@@ -204,12 +206,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             Uri imageUri = Uri.parse(bean.getMediaStringUri());
 
-            Log.d(TAG, "onBindViewHolder: Uri = " + imageUri.toString());
             bodyHolder.mPhoto.setTag(imageUri.toString());
             String string= bodyHolder.mPhoto.getTag().toString();
-            Log.d(TAG, "onBindViewHolder: " + string);
 
-            Bitmap bitmap = AlbumBitmapCacheHelper.getInstance(mContext).getBitmap(imageUri, mItemList.get(position).getMediaWidth(),
+            Bitmap bitmap = AlbumBitmapCacheHelper.getInstance(getContext()).getBitmap(imageUri, mItemList.get(position).getMediaWidth(),
                     mItemList.get(position).getMediaHeight(), bodyHolder.mPhoto,  new AlbumBitmapCacheHelper.ILoadImageCallback() {
                         @Override
                         public void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView) {
@@ -267,7 +267,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         String lastDate = null;
         for (int i = 0;i < list.size();i ++) {
             MediaInfoEntity item = list.get(i);
-            Log.d(TAG, "setAdapterList: mediaId = " + item.getMediaId() + " mediaDate = " + item.getMediaDate());
             if (item.getDataType() == BODY_TYPE) {
                 if (item.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
                     mPhotoList.add(item);
@@ -290,6 +289,8 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         this.mHeadPositionList = headList;
     }
+
+
 
 
     public Context getContext() {

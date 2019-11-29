@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 
 
@@ -20,7 +19,7 @@ public class ThumbnailUtils {
         if (!path.endsWith("/")) {
             path = path + "/";
         }
-        Log.d(TAG, "getDataPath: " + path);
+       // Log.d(TAG, "getDataPath: " + path);
         return path;
         
     }

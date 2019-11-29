@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.PreviewActivity">
+    tools:context=".ui.PreviewFragment">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
@@ -14,7 +14,7 @@
         android:background="#21282C" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_toolbar"
+        android:id="@+id/preview_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>

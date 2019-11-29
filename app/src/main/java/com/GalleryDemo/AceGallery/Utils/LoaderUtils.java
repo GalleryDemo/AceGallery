@@ -25,7 +25,7 @@ public class LoaderUtils {
     }
 
     public static String time2Date (long time) {
-        Date date = new Date(time * 1000);
+        Date date = new Date(time);
         String result = new SimpleDateFormat("yyyy-MM-dd").format(date);
         return result;
     }

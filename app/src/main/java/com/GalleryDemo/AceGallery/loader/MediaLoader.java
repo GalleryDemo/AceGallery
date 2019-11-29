@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -90,7 +89,7 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
                 };
             }*/
             String mediaName = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME));
-            long mediaTime = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_MODIFIED)); //单位是秒
+            long mediaTime = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_TAKEN)); //单位是秒
             int mediaType = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE));
             int mediaHeight = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.HEIGHT));
             int mediaWidth = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.WIDTH));
@@ -111,7 +110,7 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             }
 
             mRepository.insertItem(bodyEntity);
-            Log.d(TAG, "onLoadFinished: insertBody: offset = " + bodyEntity.getItem_id() + " mediaId = " + bodyEntity.getMediaId() + " mediaDate = " + bodyEntity.getMediaDate());
+            //Log.d(TAG, "onLoadFinished: insertBody: offset = " + bodyEntity.getItem_id() + " mediaId = " + bodyEntity.getMediaId() + " mediaDate = " + bodyEntity.getMediaDate());
 
 /*            boolean isSameDay = LoaderUtils.isSameDay(lastTime, mediaTime);
             if (!isSameDay) {

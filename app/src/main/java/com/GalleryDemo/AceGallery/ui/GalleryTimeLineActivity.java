@@ -2,22 +2,24 @@
  * @author Lumpy
  * @date 2019.11.14
  * @version 1.0
- *
  */
 
 package com.GalleryDemo.AceGallery.ui;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.GalleryDemo.AceGallery.R;
+import com.GalleryDemo.AceGallery.Utils.PermissionHelper;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
 
@@ -30,10 +32,9 @@ public class GalleryTimeLineActivity extends BaseActivity {
     private static final String TAG = "GalleryTimeLineActivity";
 
 
-
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
 
-    private static final int STORAGE_PERMISSION_REQUEST = 100;
+    private static final int PERMISSIONS_REQUEST_CODE = 66666;
 
 
     @Override
@@ -41,8 +42,6 @@ public class GalleryTimeLineActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        initView(savedInstanceState);
-        initData();
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
 
@@ -67,8 +66,8 @@ public class GalleryTimeLineActivity extends BaseActivity {
     protected void onResume() {
 
         super.onResume();
-        getSupportLoaderManager().restartLoader(0, null, new MediaLoader(this));
         Log.d(TAG, "onResume: ");
+        PermissionHelper.requsetPermissions(GalleryTimeLineActivity.this, PERMISSIONS_REQUEST_CODE);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class GalleryTimeLineActivity extends BaseActivity {
     protected void onStart() {
         Log.d(TAG, "onStart: ");
         super.onStart();
-        
+
     }
 
     @Override
@@ -101,7 +100,6 @@ public class GalleryTimeLineActivity extends BaseActivity {
     protected void initData() {
 
     }
-
 
 
     @Override
@@ -138,4 +136,29 @@ public class GalleryTimeLineActivity extends BaseActivity {
         }
         return true;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode != PERMISSIONS_REQUEST_CODE) return;
+        else {
+            boolean isPermissionAllowed = true;
+            if ((grantResults.length > 0) && (permissions.length > 0) && (grantResults.length == permissions.length)) {
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        isPermissionAllowed = false;
+                        Toast.makeText(GalleryTimeLineActivity.this, "???\n主动点自己开", Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                }
+            } else {
+                isPermissionAllowed = false;
+            }
+
+            if (!isPermissionAllowed) {
+                finish();
+            }
+        }
+
+    }
+
 }

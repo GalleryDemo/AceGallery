@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -41,6 +42,7 @@ public class VideoSurfaceView extends SurfaceView implements
     private SurfaceHolder holder;
     /**视频播放的Url*/
     private String url;
+    private Uri videoUri;
     /**播放状态*/
     private boolean isPlay;
     /**横竖屏标识*/
@@ -154,6 +156,10 @@ public class VideoSurfaceView extends SurfaceView implements
     public void setUrl(String url){
         this.url=url;
     }
+
+    public void setUri(Uri uri) {
+        this.videoUri = uri;
+    }
     /**暂停播放和继续播放*/
     public void pause() {
         if (mediaPlayer!=null){
@@ -196,7 +202,8 @@ public class VideoSurfaceView extends SurfaceView implements
     public void play(){
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource(url);
+            //mediaPlayer.setDataSource(url);
+            mediaPlayer.setDataSource(context, videoUri);
             /**异步装载*/
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

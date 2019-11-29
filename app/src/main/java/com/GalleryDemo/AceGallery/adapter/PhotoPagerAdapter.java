@@ -3,12 +3,14 @@ package com.GalleryDemo.AceGallery.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -16,7 +18,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
-import com.GalleryDemo.AceGallery.ui.view.VideoSurfaceView;
+import com.GalleryDemo.AceGallery.ui.PreviewFragment;
+import com.GalleryDemo.AceGallery.ui.VideoSurfaceFragment;
 import com.GalleryDemo.AceGallery.ui.view.ZoomImageView;
 
 import java.io.FileNotFoundException;
@@ -26,16 +29,20 @@ import java.util.List;
 
 import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
 
-public class PhotoPagerAdapter extends PagerAdapter {
+public class PhotoPagerAdapter extends PagerAdapter implements View.OnClickListener {
 
     private static final String TAG = "PhotoPagerAdapter";
 
     private Context mContext;
+    private PreviewFragment previewFragment;
+
+    private MediaInfoEntity mediaItem;
     private List<MediaInfoEntity> mPagerList = new ArrayList<>();
 
 
-    public PhotoPagerAdapter(Context context) {
+    public PhotoPagerAdapter(Context context, PreviewFragment previewFragment) {
         this.mContext = context;
+        this.previewFragment = previewFragment;
     }
 
     @Override
@@ -54,6 +61,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
+
         int mediaType = mPagerList.get(position).getMediaType();
         if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
             Log.d(TAG, "instantiateItem: position = " + position);
@@ -97,8 +105,18 @@ public class PhotoPagerAdapter extends PagerAdapter {
     }
 
     private View instantiateVideoItem(int position) {
-        View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.video_surface, null);
-        final VideoSurfaceView videoSurfaceView = view.findViewById(R.id.video_surface_view);
+        mediaItem = mPagerList.get(position);
+        /*View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.fragment_video_surface, null);*/
+        View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.video_preview, null);
+        final ImageView mVideo = view.findViewById(R.id.video_picture);
+        final ImageView mPlay = view.findViewById(R.id.play_video);
+        mPlay.setImageResource(R.drawable.video_iconl);
+        mPlay.setOnClickListener(this);
+        Uri videoUri = Uri.parse(mediaItem.getMediaStringUri());
+        MediaMetadataRetriever video = new MediaMetadataRetriever();
+        video.setDataSource(mContext, videoUri);
+        mVideo.setImageBitmap(video.getFrameAtTime());
+
         return view;
     }
 
@@ -120,4 +138,19 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
 
 
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.play_video:
+                VideoSurfaceFragment videoSurfaceFragment = VideoSurfaceFragment.newInstance(mediaItem);
+                Log.d(TAG, "onClick: activity is " + videoSurfaceFragment.hashCode());
+                previewFragment.getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragment_container, videoSurfaceFragment)
+                        .addToBackStack(null)
+                        .commit();
+        }
+    }
 }

@@ -42,6 +42,7 @@ public class GalleryTimeLineFragment extends BaseFragment{
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public void onResume() {
         super.onResume();

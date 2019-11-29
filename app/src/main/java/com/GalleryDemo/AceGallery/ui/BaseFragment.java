@@ -1,6 +1,7 @@
 package com.GalleryDemo.AceGallery.ui;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,10 +11,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 public abstract class BaseFragment extends Fragment {
 
     public Context mContext;
+    public FragmentActivity mActivity;
 
 
     @Override
@@ -37,6 +40,21 @@ public abstract class BaseFragment extends Fragment {
 
         initView(view, savedInstanceState);
         initData(view, savedInstanceState);
+
+    }
+
+
+    public BaseActivity getBaseActivty() {
+        return (BaseActivity)mContext;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity) {
+            this.mActivity = (FragmentActivity) context;
+        }
 
     }
 

@@ -52,6 +52,7 @@ public class GalleryTimeLineActivity extends BaseActivity {
                     .commit();
         }
 
+        Log.d(TAG, "onCreate: activity is " + this.hashCode());
 
     }
 

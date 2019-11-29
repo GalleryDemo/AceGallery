@@ -23,11 +23,13 @@ public class PreviewFragment extends BaseFragment {
     private static final String EXTRA_PAGER_MEDIA_ITEM = "com.GalleryDemo.AceGallery.ui.PreviewFragment.mediaInfoEntity";
 
     private Toolbar mToolbar;
-
     private ViewPager mViewPager;
-    private MediaInfoEntity mediaInfoEntity;
+
     private PhotoPagerAdapter mPhotoPagerAdapter;
+
     private MediaInfoViewModel mViewModel;
+
+    private MediaInfoEntity mediaInfoEntity;
     private List<MediaInfoEntity> mPagerList = new ArrayList<>();
 
 
@@ -53,9 +55,10 @@ public class PreviewFragment extends BaseFragment {
         mViewPager = view.findViewById(R.id.viewpager);
     }
 
+
     @Override
     protected void initData(View view, Bundle savedInstanceState) {
-        mPhotoPagerAdapter = new PhotoPagerAdapter(getContext());
+        mPhotoPagerAdapter = new PhotoPagerAdapter(getContext(),this);
         mViewModel = ViewModelProviders.of(getActivity()).get(MediaInfoViewModel.class);
         mViewModel.getAllItems().observe(getActivity(), new Observer<List<MediaInfoEntity>>() {
             @Override
@@ -70,7 +73,6 @@ public class PreviewFragment extends BaseFragment {
         mViewPager.setAdapter(mPhotoPagerAdapter);
         mPagerList = mPhotoPagerAdapter.getPagerList();
         mViewPager.setCurrentItem(getPhotoPositionByItemPosition(mediaInfoEntity));
-        //todo:why can't find the entity?
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -98,5 +100,6 @@ public class PreviewFragment extends BaseFragment {
         }
         return -1;
     }
+
 
 }

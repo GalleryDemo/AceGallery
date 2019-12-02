@@ -51,6 +51,10 @@ public class GalleryTimeLineActivity extends BaseActivity {
                     .commit();
         }
 
+        if(PermissionHelper.hasPermissions(this)){
+            getSupportLoaderManager().initLoader(0, null, new MediaLoader(this));
+        }
+
         Log.d(TAG, "onCreate: activity is " + this.hashCode());
 
     }
@@ -67,7 +71,11 @@ public class GalleryTimeLineActivity extends BaseActivity {
 
         super.onResume();
         Log.d(TAG, "onResume: ");
-        PermissionHelper.requsetPermissions(GalleryTimeLineActivity.this, PERMISSIONS_REQUEST_CODE);
+        if(PermissionHelper.hasPermissions(this)){
+            getSupportLoaderManager().restartLoader(0, null, new MediaLoader(this));
+        }else {
+            PermissionHelper.requsetPermissions(GalleryTimeLineActivity.this, PERMISSIONS_REQUEST_CODE);
+        }
     }
 
     @Override
@@ -156,6 +164,8 @@ public class GalleryTimeLineActivity extends BaseActivity {
 
             if (!isPermissionAllowed) {
                 finish();
+            }else {
+                getSupportLoaderManager().initLoader(0, null, new MediaLoader(this));
             }
         }
 

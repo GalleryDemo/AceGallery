@@ -20,7 +20,7 @@ public class PhotoItemLayout extends ConstraintLayout {
     }
 
 
-
+    //限制长宽，方形
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(getDefaultSize(0, widthMeasureSpec), getDefaultSize(0, heightMeasureSpec));

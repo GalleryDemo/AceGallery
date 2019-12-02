@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.GridItemDividerDecoration;
+import com.GalleryDemo.AceGallery.Utils.PermissionHelper;
 import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
@@ -27,7 +28,7 @@ import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.FOOT_TYPE
 import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.HEAD_TYPE;
 
 
-public class GalleryTimeLineFragment extends BaseFragment{
+public class GalleryTimeLineFragment extends BaseFragment {
 
 
     private RecyclerView mRecyclerView;
@@ -46,7 +47,7 @@ public class GalleryTimeLineFragment extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
-        mRecyclerView.setAdapter(mTimeLineAdapter);
+
     }
 
     @Override
@@ -58,7 +59,7 @@ public class GalleryTimeLineFragment extends BaseFragment{
     protected void initView(View view, Bundle savedInstanceState) {
 
         mToolbar = view.findViewById(R.id.time_line_toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         setHasOptionsMenu(true);
         mToolbar.setNavigationIcon(R.drawable.left_sidebar);
         mRecyclerView = view.findViewById(R.id.photo_recycler_view);
@@ -78,8 +79,8 @@ public class GalleryTimeLineFragment extends BaseFragment{
 
         mTimeLineAdapter = new GalleryTimeLineAdapter(getContext(), this);
 
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
+        //网格布局部分：图片一列，时间轴三列
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -98,7 +99,9 @@ public class GalleryTimeLineFragment extends BaseFragment{
         });
         mRecyclerView.addItemDecoration(new GridItemDividerDecoration(getContext(), mTimeLineAdapter));
         mRecyclerView.setAdapter(mTimeLineAdapter);
-        getActivity().getSupportLoaderManager().initLoader(0, null, new MediaLoader(getActivity()));
+/*        if(PermissionHelper.hasPermissions(getActivity())) {
+            getActivity().getSupportLoaderManager().initLoader(0, null, new MediaLoader(getActivity()));
+        }*/
     }
 
 

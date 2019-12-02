@@ -23,7 +23,6 @@ public class PermissionHelper {
     }
 
     public static void requsetPermissions(Activity activity,int requestCode){
-        if(hasPermissions(activity)) return;
         activity.requestPermissions(PERMISSIONS,requestCode);
     }
 

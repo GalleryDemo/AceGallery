@@ -5,7 +5,7 @@ import android.content.Context;
 
 
 public class ApplicationContextUtils extends Application {
-
+    //todo enum
     public static final int HEAD_TYPE = 0;
 
     public static final int BODY_TYPE = 1;
@@ -21,8 +21,8 @@ public class ApplicationContextUtils extends Application {
         return sContext;
     }
 
-    public static Application getInstance(){
-        return  sApplication;
+    public static Application getInstance() {
+        return sApplication;
     }
 
     @Override

@@ -24,9 +24,7 @@ import java.io.IOException;
 
 import static java.lang.Math.min;
 
-/**
- * Created by tianzl on 2017/8/17.
- */
+
 
 public class VideoSurfaceView extends SurfaceView implements
         View.OnTouchListener

@@ -49,10 +49,12 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
+
+    //剔除头结点 待优化 todo
     private List<MediaInfoEntity> mPhotoList = new ArrayList<>();
 
     private MediaInfoEntity bean;
-    private int index;
+
 
 
 
@@ -87,6 +89,8 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public BodyViewHolder(final View itemView) {
             super(itemView);
             mPhoto = itemView.findViewById(R.id.photo_image);
+
+            //点击图片进入大图的监听
             mPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,11 +104,13 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             .commit();
                 }
             });
+
             mFavorImage = itemView.findViewById(R.id.favor_tiny);
             mPhotoDate = itemView.findViewById(R.id.media_date_tiny);
             mPhotoLocation = itemView.findViewById(R.id.media_location_tiny);
             mMediaType = itemView.findViewById(R.id.media_type_tiny);
             mMoreButton = itemView.findViewById(R.id.more_button_tiny);
+
             mMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -182,7 +188,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         bean = mItemList.get(position);
-        index = position;
 
         if (holder instanceof HeadViewHolder) {
 
@@ -262,6 +267,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    //把全部数据的列表分成body和head
     public void setAdapterList(List<MediaInfoEntity> list) {
         List<Integer> headList = new ArrayList<>();
         String lastDate = null;
@@ -271,6 +277,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if (item.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
                     mPhotoList.add(item);
                 }
+                //对比时间，时间不同，插入时间节点
                 if (!item.getMediaDate().equals(lastDate)) {
                     MediaInfoEntity timeLineItem = new MediaInfoEntity(0,
                             0, null, null,

@@ -29,14 +29,13 @@ import java.util.List;
 
 import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
 
-public class PhotoPagerAdapter extends PagerAdapter implements View.OnClickListener {
+public class PhotoPagerAdapter extends PagerAdapter {
 
     private static final String TAG = "PhotoPagerAdapter";
 
     private Context mContext;
     private PreviewFragment previewFragment;
 
-    private MediaInfoEntity mediaItem;
     private List<MediaInfoEntity> mPagerList = new ArrayList<>();
 
 
@@ -61,17 +60,17 @@ public class PhotoPagerAdapter extends PagerAdapter implements View.OnClickListe
 
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-
         int mediaType = mPagerList.get(position).getMediaType();
         if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
-            Log.d(TAG, "instantiateItem: position = " + position);
+            Log.d(TAG, "instantiateItem: VideoPosition = " + position);
             View videoView = instantiateVideoItem(position);
             container.addView(videoView);
             return videoView;
 
         } else if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
-
+            Log.d(TAG, "instantiateItem: PhotoPosition = " + position);
             View photoView = instantiatePhotoItem(position);
+
             container.addView(photoView);
             return photoView;
 
@@ -87,11 +86,9 @@ public class PhotoPagerAdapter extends PagerAdapter implements View.OnClickListe
         container.removeView(view);
     }
 
-
     private View instantiatePhotoItem(int position) {
         View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.widget_zoom_image, null);
         final ZoomImageView zoomImageView = view.findViewById(R.id.photoImage);
-        Log.d(TAG, "instantiateItem: position = " + position);
         Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
         Bitmap bitmap = null;
         try {
@@ -105,14 +102,26 @@ public class PhotoPagerAdapter extends PagerAdapter implements View.OnClickListe
     }
 
     private View instantiateVideoItem(int position) {
-        mediaItem = mPagerList.get(position);
-        /*View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.fragment_video_surface, null);*/
+        final MediaInfoEntity videoItem = mPagerList.get(position);
         View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.video_preview, null);
-        final ImageView mVideo = view.findViewById(R.id.video_picture);
-        final ImageView mPlay = view.findViewById(R.id.play_video);
-        mPlay.setImageResource(R.drawable.video_iconl);
-        mPlay.setOnClickListener(this);
-        Uri videoUri = Uri.parse(mediaItem.getMediaStringUri());
+
+        ImageView mVideo = view.findViewById(R.id.video_picture);
+        ImageView mPlayVideo = view.findViewById(R.id.play_video);
+        mPlayVideo.setImageResource(R.drawable.video_iconl);
+        mPlayVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoSurfaceFragment videoSurfaceFragment = VideoSurfaceFragment.newInstance(videoItem);
+                Log.d(TAG, "onClick: activity is " + videoSurfaceFragment.hashCode());
+                previewFragment.getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragment_container, videoSurfaceFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        Uri videoUri = Uri.parse(videoItem.getMediaStringUri());
         MediaMetadataRetriever video = new MediaMetadataRetriever();
         video.setDataSource(mContext, videoUri);
         mVideo.setImageBitmap(video.getFrameAtTime());
@@ -137,20 +146,4 @@ public class PhotoPagerAdapter extends PagerAdapter implements View.OnClickListe
     }
 
 
-
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.play_video:
-                VideoSurfaceFragment videoSurfaceFragment = VideoSurfaceFragment.newInstance(mediaItem);
-                Log.d(TAG, "onClick: activity is " + videoSurfaceFragment.hashCode());
-                previewFragment.getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.fragment_container, videoSurfaceFragment)
-                        .addToBackStack(null)
-                        .commit();
-        }
-    }
 }

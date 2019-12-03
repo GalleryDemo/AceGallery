@@ -2,17 +2,18 @@ package com.GalleryDemo.AceGallery.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "mediaInfoEntity")
+@Entity(tableName = "mediaInfoEntity",
+        indices = {@Index(value = "media_id", unique = true)})
 public class MediaInfoEntity implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "item_id")
     private int item_id;
-
 
     @ColumnInfo(name = "media_id")
     private int mediaId;
@@ -44,11 +45,14 @@ public class MediaInfoEntity implements Serializable {
     @ColumnInfo(name = "data_type")
     private int dataType;
 
+    @ColumnInfo(name = "favor_selected")
+    private boolean favor;
 
-    public MediaInfoEntity(int item_id, int mediaId, String mediaAddress, String mediaStringUri, String mediaName,
+
+    public MediaInfoEntity(int mediaId, String mediaAddress, String mediaStringUri, String mediaName,
                            String mediaDate, int mediaType, String videoDuration, int mediaHeight,
                            int mediaWidth, int dataType) {
-        this.item_id = item_id;
+
         this.mediaId = mediaId;
         this.mediaAddress = mediaAddress;
         this.mediaStringUri = mediaStringUri;
@@ -150,7 +154,13 @@ public class MediaInfoEntity implements Serializable {
         this.dataType = dataType;
     }
 
+    public boolean isFavor() {
+        return favor;
+    }
 
+    public void setFavor(boolean favor) {
+        this.favor = favor;
+    }
 }
 
 

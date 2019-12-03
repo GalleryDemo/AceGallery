@@ -25,6 +25,7 @@ public class PreviewFragment extends BaseFragment {
     private Toolbar mToolbar;
     private ViewPager mViewPager;
 
+
     private PhotoPagerAdapter mPhotoPagerAdapter;
 
     private MediaInfoViewModel mViewModel;
@@ -53,13 +54,17 @@ public class PreviewFragment extends BaseFragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         setHasOptionsMenu(true);
         mViewPager = view.findViewById(R.id.viewpager);
+
+
     }
 
 
     @Override
     protected void initData(View view, Bundle savedInstanceState) {
         mPhotoPagerAdapter = new PhotoPagerAdapter(getContext(),this);
+
         mViewModel = ViewModelProviders.of(getActivity()).get(MediaInfoViewModel.class);
+
         mViewModel.getAllItems().observe(getActivity(), new Observer<List<MediaInfoEntity>>() {
             @Override
             public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
@@ -69,18 +74,19 @@ public class PreviewFragment extends BaseFragment {
 
         mediaInfoEntity = (MediaInfoEntity) getArguments().getSerializable(EXTRA_PAGER_MEDIA_ITEM);
 
-
         mViewPager.setAdapter(mPhotoPagerAdapter);
         mPagerList = mPhotoPagerAdapter.getPagerList();
         mViewPager.setCurrentItem(getPhotoPositionByItemPosition(mediaInfoEntity));
+        mediaInfoEntity = mPagerList.get(mViewPager.getCurrentItem());
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
 
             }
 

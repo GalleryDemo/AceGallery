@@ -25,12 +25,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.ui.GalleryTimeLineFragment;
+import com.GalleryDemo.AceGallery.ui.MediaInfoViewModel;
 import com.GalleryDemo.AceGallery.ui.PreviewFragment;
 
 import java.util.ArrayList;
@@ -49,18 +51,17 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
+    private MediaInfoViewModel mViewModel;
 
     //剔除头结点 待优化 todo
     private List<MediaInfoEntity> mPhotoList = new ArrayList<>();
 
-    private MediaInfoEntity bean;
-
-
-
+    private MediaInfoEntity entity;
 
     public GalleryTimeLineAdapter(Context mContext, GalleryTimeLineFragment fragment) {
         this.mContext = mContext;
         this.fragment = fragment;
+        this.mViewModel = ViewModelProviders.of(fragment).get(MediaInfoViewModel.class);
 
     }
 
@@ -141,6 +142,21 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             });
             mVideoLength = itemView.findViewById(R.id.video_length_tiny);
             mPhotoType = itemView.findViewById(R.id.photo_type_tiny);
+
+            mFavorImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MediaInfoEntity favorEntity = mItemList.get(getAdapterPosition());
+                    if (favorEntity.isFavor()) {
+                        mFavorImage.clearColorFilter();
+                        favorEntity.setFavor(false);
+                    } else {
+                        mFavorImage.setColorFilter(Color.RED);
+                        favorEntity.setFavor(true);
+                    }
+                    mViewModel.update(favorEntity);
+                }
+            });
         }
 
 
@@ -173,6 +189,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return new BodyViewHolder(bodyView);
         } else if (viewType == FOOT_TYPE) {
             View footView = LayoutInflater.from(parent.getContext()).inflate(R.layout.statistics_bottom_item, parent, false);
+
             return new FootViewHolder(footView);
         } else {
             Log.d(TAG, "onCreateViewHolder: wrong type!");
@@ -187,11 +204,11 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        bean = mItemList.get(position);
+        entity = mItemList.get(position);
 
         if (holder instanceof HeadViewHolder) {
 
-            ((HeadViewHolder)holder).time_line.setText(bean.getMediaDate());
+            ((HeadViewHolder)holder).time_line.setText(entity.getMediaDate());
 
         } else if (holder instanceof FootViewHolder) {
 
@@ -202,14 +219,14 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             final BodyViewHolder bodyHolder = (BodyViewHolder)holder;
             //todo:fix the location float[2];
 
-/*            if (bean.getMediaLocation()[0] != 0 || bean.getMediaLocation()[1] != 0) {
-                LocationUtils.setAddress(mContext, bean.getMediaId(), bean.getMediaLocation()[0], bean.getMediaLocation()[1], bodyHolder.mPhotoLocation);
+/*            if (entity.getMediaLocation()[0] != 0 || entity.getMediaLocation()[1] != 0) {
+                LocationUtils.setAddress(mContext, entity.getMediaId(), entity.getMediaLocation()[0], entity.getMediaLocation()[1], bodyHolder.mPhotoLocation);
             }
             else {
                 bodyHolder.mPhotoLocation.setText("");
             }*/
 
-            Uri imageUri = Uri.parse(bean.getMediaStringUri());
+            Uri imageUri = Uri.parse(entity.getMediaStringUri());
 
             bodyHolder.mPhoto.setTag(imageUri.toString());
             String string= bodyHolder.mPhoto.getTag().toString();
@@ -230,30 +247,28 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 bodyHolder.mPhoto.setImageBitmap(bitmap);
             }
 
-            bodyHolder.mPhotoDate.setText(bean.getMediaDate());
-            bodyHolder.mPhotoLocation.setText(bean.getMediaAddress());
+            bodyHolder.mPhotoDate.setText(entity.getMediaDate());
+            bodyHolder.mPhotoLocation.setText(entity.getMediaAddress());
 
-            //Log.d(TAG, "onBindViewHolder: MediaType = " + bean.getMediaType());
-            if (bean.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
+            //Log.d(TAG, "onBindViewHolder: MediaType = " + entity.getMediaType());
+            if (entity.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 bodyHolder.mMediaType.setVisibility(View.VISIBLE);
                 bodyHolder.mPhotoType.setVisibility(View.INVISIBLE);
                 bodyHolder.mVideoLength.setVisibility(View.VISIBLE);
-                bodyHolder.mVideoLength.setText(bean.getVideoDuration());
+                bodyHolder.mVideoLength.setText(entity.getVideoDuration());
             } else {
                 bodyHolder.mMediaType.setVisibility(View.INVISIBLE);
                 bodyHolder.mVideoLength.setVisibility(View.INVISIBLE);
                 bodyHolder.mPhotoType.setVisibility(View.VISIBLE);
-                final String mediaName = bean.getMediaName();
+                final String mediaName = entity.getMediaName();
                 bodyHolder.mPhotoType.setText(mediaName.substring(mediaName.lastIndexOf('.')+1));
             }
 
-            bodyHolder.mFavorImage.setImageResource(R.drawable.favor);
-            bodyHolder.mFavorImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    bodyHolder.mFavorImage.setColorFilter(Color.RED);
-                }
-            });
+            if (entity.isFavor()) {
+                bodyHolder.mFavorImage.setColorFilter(Color.RED);
+            } else {
+                bodyHolder.mFavorImage.clearColorFilter();
+            }
         }
     }
 
@@ -279,7 +294,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
                 //对比时间，时间不同，插入时间节点
                 if (!item.getMediaDate().equals(lastDate)) {
-                    MediaInfoEntity timeLineItem = new MediaInfoEntity(0,
+                    MediaInfoEntity timeLineItem = new MediaInfoEntity(
                             0, null, null,
                             null, item.getMediaDate(), 0,
                             null, 0, 0, HEAD_TYPE);

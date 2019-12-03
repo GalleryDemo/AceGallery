@@ -51,9 +51,6 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
         mRepository = new MediaInfoRepository(ApplicationContextUtils.getInstance());
 
-        long lastTime = 0;
-        int offset = 0;
-
         Cursor mCursor = (Cursor) data; //接收返回的cursor
         while (mCursor.moveToNext()) {
             //拼接获取多媒体资源的Uri
@@ -93,11 +90,10 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             int mediaType = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE));
             int mediaHeight = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.HEIGHT));
             int mediaWidth = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.WIDTH));
-            //Log.d(mediaTime + "       " + LoaderUtils.time2Date(mediaTime), "onLoadFinished");
 
             String mediaDate = LoaderUtils.time2Date(mediaTime);//日期long转String
 
-            MediaInfoEntity bodyEntity = new MediaInfoEntity(mediaId + offset, mediaId, null,
+            MediaInfoEntity bodyEntity = new MediaInfoEntity(mediaId, null,
                     mediaUri.toString(), mediaName, mediaDate, mediaType,
                     null, mediaHeight, mediaWidth, BODY_TYPE);
 

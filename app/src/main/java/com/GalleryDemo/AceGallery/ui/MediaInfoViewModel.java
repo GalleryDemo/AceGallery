@@ -36,16 +36,16 @@ public class MediaInfoViewModel extends AndroidViewModel {
         return mRepository.getItem(mediaId);
     }
 
-    public void insertAllItems(List<MediaInfoEntity> items) {
-        mRepository.insertAllItems(items);
-    }
-
     public void insertItem(MediaInfoEntity item) {
         mRepository.insertItem(item);
     }
 
     public void deleteItem(int mediaId) {
         mRepository.deleteItem(mediaId);
+    }
+
+    public void update(MediaInfoEntity item) {
+        mRepository.update(item);
     }
 
 }

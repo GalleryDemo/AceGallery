@@ -19,6 +19,7 @@ public class MediaInfoRepository {
 
     private MediaDao mMediaDao;
 
+
     private Context mContext;
 
     public MediaInfoRepository(Application application) {
@@ -35,7 +36,6 @@ public class MediaInfoRepository {
 
     }
 
-
     public MediaInfoEntity getItem(int mediaId) throws ExecutionException, InterruptedException {
         return new getItemAsync(mMediaDao).execute(mediaId).get();
     }
@@ -45,28 +45,14 @@ public class MediaInfoRepository {
     }
 
 
-    public void insertAllItems(List<MediaInfoEntity> items) {
-        new insertAllItemsAsync(mMediaDao).execute(items);
-    }
-
     public void deleteItem(int mediaId) {
         new deleteItemAsync(mMediaDao).execute(mediaId);
     }
 
-/*    private static class getAllItemsAsync extends AsyncTask<Void, Void, LiveData<List<MediaInfoEntity>>> {
-        private MediaDao mMediaDaoAsync;
 
-        getAllItemsAsync(MediaDao mediaDao) {
-            mMediaDaoAsync = mediaDao;
-        }
-
-        @Override
-        protected LiveData<List<MediaInfoEntity>> doInBackground(Void... voids) {
-            mMediaDaoAsync.getAllItems();
-            return null;
-        }
-    }*/
-
+    public void update(MediaInfoEntity item) {
+        new updateAsync(mMediaDao).execute(item);
+    }
 
     private static class getItemAsync extends AsyncTask<Integer, Void, MediaInfoEntity> {
 
@@ -96,20 +82,6 @@ public class MediaInfoRepository {
         }
     }
 
-    private static class insertAllItemsAsync extends AsyncTask<List<MediaInfoEntity>, Void, Void> {
-
-        private MediaDao mMediaDaoAsync;
-
-        insertAllItemsAsync(MediaDao mediaDao) {
-            mMediaDaoAsync = mediaDao;
-        }
-
-        @Override
-        protected Void doInBackground(List<MediaInfoEntity>... lists) {
-            mMediaDaoAsync.insertAllItem(lists[0]);
-            return null;
-        }
-    }
 
     private static class deleteItemAsync extends AsyncTask<Integer, Void, Void> {
 
@@ -122,6 +94,20 @@ public class MediaInfoRepository {
         @Override
         protected Void doInBackground(Integer... integers) {
             mMediaDaoAsync.delete(integers[0]);
+            return null;
+        }
+    }
+
+    private static class updateAsync extends AsyncTask<MediaInfoEntity, Void, Void> {
+        private MediaDao mMediaDaoAsync;
+
+        updateAsync(MediaDao mediaDao) {
+            mMediaDaoAsync = mediaDao;
+        }
+
+        @Override
+        protected Void doInBackground(MediaInfoEntity... mediaInfoEntities) {
+            mMediaDaoAsync.update(mediaInfoEntities[0]);
             return null;
         }
     }

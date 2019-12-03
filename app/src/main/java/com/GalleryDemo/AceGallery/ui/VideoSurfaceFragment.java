@@ -133,6 +133,8 @@ public class VideoSurfaceFragment extends BaseFragment implements View.OnClickLi
         mysurfaceView.finishVideo();
     }*/
 
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){

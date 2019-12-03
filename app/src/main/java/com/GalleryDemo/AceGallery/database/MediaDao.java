@@ -5,11 +5,13 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
 @Dao
 public interface MediaDao {
+
     @Query("SELECT * FROM MediaInfoEntity ORDER BY media_date DESC, media_id DESC")
     LiveData<List<MediaInfoEntity>> getAllItems();
 
@@ -22,14 +24,13 @@ public interface MediaDao {
     @Query("UPDATE MediaInfoEntity SET media_address = :mediaAddress WHERE media_id = :mediaId")
     void updateAddress(int mediaId, String mediaAddress);
 
-    @Query("DELETE FROM MediaInfoEntity WHERE media_id = :mediaId")
+    @Query("DELETE FROM MEDIAINFOENTITY WHERE media_id = :mediaId")
     void delete(int mediaId);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertItem(MediaInfoEntity item);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAllItem(List<MediaInfoEntity> items);
-
+    @Update
+    void update(MediaInfoEntity item);
 }
 

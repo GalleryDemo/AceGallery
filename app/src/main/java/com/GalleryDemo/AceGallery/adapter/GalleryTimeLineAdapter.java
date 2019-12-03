@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
+import com.GalleryDemo.AceGallery.database.MediaDatabase;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.ui.GalleryTimeLineFragment;
 import com.GalleryDemo.AceGallery.ui.MediaInfoViewModel;
@@ -37,6 +38,7 @@ import com.GalleryDemo.AceGallery.ui.PreviewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
 import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.FOOT_TYPE;
@@ -124,7 +126,8 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                             switch (item.getItemId()) {
                                 case R.id.delete:
-                                    Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                                    removeData(getAdapterPosition());
+                                    /*Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();*/
                                     break;
                                 case R.id.exit:
                                     Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
@@ -175,6 +178,17 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemViewType(int position) {
         return mItemList.get(position).getDataType();
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        if (holder instanceof BodyViewHolder) {
+            Future<?> task = (Future<?>) ((BodyViewHolder)holder).mPhoto.getTag(R.id.tag_first);
+            if (task != null) {
+                task.cancel(true);
+            }
+        }
     }
 
     @Override
@@ -231,21 +245,20 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             bodyHolder.mPhoto.setTag(imageUri.toString());
             String string= bodyHolder.mPhoto.getTag().toString();
 
-            Bitmap bitmap = AlbumBitmapCacheHelper.getInstance(getContext()).getBitmap(imageUri, mItemList.get(position).getMediaWidth(),
-                    mItemList.get(position).getMediaHeight(), bodyHolder.mPhoto,  new AlbumBitmapCacheHelper.ILoadImageCallback() {
-                        @Override
-                        public void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView) {
-                            if (bitmap == null) {
-                                return;
+                Bitmap bitmap = AlbumBitmapCacheHelper.getInstance(getContext()).getBitmap(imageUri, mItemList.get(position), bodyHolder.mPhoto, new AlbumBitmapCacheHelper.ILoadImageCallback() {
+                            @Override
+                            public void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView) {
+                                if (bitmap == null) {
+                                    return;
+                                }
+                                if (imageView.getTag().equals(uri.toString())) {
+                                    imageView.setImageBitmap(bitmap);
+                                }
                             }
-                            if (imageView.getTag().equals(uri.toString())) {
-                                imageView.setImageBitmap(bitmap);
-                            }
-                        }
-                    });
-            if (bitmap != null) {
-                bodyHolder.mPhoto.setImageBitmap(bitmap);
-            }
+                        });
+                if (bitmap != null) {
+                    bodyHolder.mPhoto.setImageBitmap(bitmap);
+                }
 
             bodyHolder.mPhotoDate.setText(entity.getMediaDate());
             bodyHolder.mPhotoLocation.setText(entity.getMediaAddress());
@@ -319,5 +332,42 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return mContext;
     }
 
+    private void removeData(final int pos) {
+        if (pos > 0){
+            final MediaInfoEntity mItem = mItemList.get(pos);
+            if (mItem != null) {
+                mContext.getContentResolver().delete(Uri.parse(mItem.getMediaStringUri()), null, null);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        MediaDatabase.getInstance(mContext).getMediaDao().delete(mItem.getMediaId());
+                    }
+                }.start();
+                int i = mItemList.get(pos - 1).getDataType();
+                Log.d(TAG, "run: " + i);
+                int b = mItemList.size();
+                Log.d(TAG, "run: " + b);
+                if (((pos == mItemList.size()-1) ||(mItemList.get(pos + 1).getDataType() == 0)) && (mItemList.get(pos - 1).getDataType() == 0)) {
+                    mItemList.remove(pos);
+                    notifyItemRemoved(pos);
+                    mItemList.remove(pos - 1);
+                    notifyItemRemoved(pos - 1);
 
+                } else {
+                    mItemList.remove(pos);
+                    notifyItemRemoved(pos);
+                }
+            }
+            notifyDataSetChanged();
+            /*notifyItemRemoved(pos);
+            int c = mItemList.size();
+            Log.d(TAG, "removeData: " + c);
+            if (pos != mItemList.size()) {
+               notifyItemRangeChanged(pos, (mItemList.size() - pos));
+
+            }*/
+
+        }
+
+    }
 }

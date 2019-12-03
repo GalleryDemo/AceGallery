@@ -57,7 +57,7 @@ public class MediaInfoEntity implements Serializable {
         this.mediaAddress = mediaAddress;
         this.mediaStringUri = mediaStringUri;
         this.mediaName = mediaName;
-        this.mediaDate = mediaDate;
+        this.mediaDate = mediaDate; //1图片， 3视频
         this.mediaType = mediaType;
         this.videoDuration = videoDuration;
         this.mediaHeight = mediaHeight;

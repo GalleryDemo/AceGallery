@@ -3,6 +3,7 @@ package com.GalleryDemo.AceGallery.Utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,9 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.GalleryDemo.AceGallery.R;
+import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -58,15 +63,19 @@ public class AlbumBitmapCacheHelper {
         return instance;
     }
 
-    public Bitmap getBitmap(final Uri uri, final int width, final int height, final ImageView imageView, final ILoadImageCallback callback){
-        Bitmap bitmap = getBitmapFromCache(uri.toString(), width, height);
+    public Bitmap getBitmap(final Uri uri, final MediaInfoEntity mediaInfoEntity, final ImageView imageView, final ILoadImageCallback callback){
+        Bitmap bitmap = getBitmapFromCache(uri.toString(), mediaInfoEntity.getMediaWidth(), mediaInfoEntity.getMediaHeight());
         if (bitmap == null) {
-            decodeBitmapFromPath(uri, width, height, callback, imageView);
+            decodeBitmapFromPath(uri, mediaInfoEntity, callback, imageView);
         }
         return bitmap;
     }
 
-    private void decodeBitmapFromPath(final Uri uri, final int width, final int height, final ILoadImageCallback callback, final ImageView imageView) throws OutOfMemoryError {
+    private void decodeBitmapFromPath(final Uri uri, final MediaInfoEntity mediaInfoEntity, final ILoadImageCallback callback, final ImageView imageView) throws OutOfMemoryError {
+
+        final int width = mediaInfoEntity.getMediaWidth();
+        final int height = mediaInfoEntity.getMediaHeight();
+
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -74,7 +83,7 @@ public class AlbumBitmapCacheHelper {
             }
         };
 
-        tpe.execute(new Runnable() {
+        Future<?> task = tpe.submit(new Runnable() {
             @Override
             public void run() {
                 File picFile = null;
@@ -82,10 +91,11 @@ public class AlbumBitmapCacheHelper {
                 int screenWidthMetrics = ThumbnailUtils.getScreenMetrics(mContext).widthPixels / 3;
                 //创建存储缩略图路径
                 File file = new File(ThumbnailUtils.getDataPath());
+
                 if (!file.exists()) {
                     file.mkdir();
                 }
-                String tempPath = ThumbnailUtils.getDataPath() + ThumbnailUtils.getFileName(uri.toString()) + ".jpg";
+                String tempPath = ThumbnailUtils.getDataPath() + ThumbnailUtils.toHash(uri.toString()) + ".temp";
 
                 picFile = new File(uri.toString());
 
@@ -95,35 +105,44 @@ public class AlbumBitmapCacheHelper {
                     bitmap = BitmapFactory.decodeFile(tempPath);
                 } else {
                     //制作缩略图
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    try {
-                        InputStream imageStream = mContext.getContentResolver().openInputStream(uri);
-                        BitmapFactory.decodeStream(imageStream,null,  options);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                    if(mediaInfoEntity.getMediaType() == 1) {
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        try {
+                            InputStream imageStream = mContext.getContentResolver().openInputStream(uri);
+                            BitmapFactory.decodeStream(imageStream,null,  options);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        int test = options.outWidth / screenWidthMetrics;
+                        int test11 = options.outWidth;
+                        int test2 = ThumbnailUtils.getScreenMetrics(mContext).widthPixels / 3;
+                        Log.d(TAG, "run: " + test + test2 + test11);
+                        int sample = (int) options.outWidth > options.outHeight ? options.outHeight / screenWidthMetrics
+                                : options.outWidth / screenWidthMetrics;
+                        if (sample < 1) {
+                            sample = 1;
+                        }
+                        options.inSampleSize = sample;
+                        options.inJustDecodeBounds = false;
+                        try {
+                            InputStream imageStream = mContext.getContentResolver().openInputStream(uri);
+                            bitmap = BitmapFactory.decodeStream(imageStream, null, options);
+                            imageStream.close();
+                        } catch (FileNotFoundException e) {
+                            bitmap = null;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                            retriever.setDataSource(mContext, uri);
+                            bitmap = retriever.getFrameAtIndex(0);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
-                    int test = options.outWidth / screenWidthMetrics;
-                    int test11 = options.outWidth;
-                    int test2 = ThumbnailUtils.getScreenMetrics(mContext).widthPixels / 3;
-                    Log.d(TAG, "run: " + test + test2 + test11);
-                    int sample = (int) options.outWidth > options.outHeight ? options.outHeight / screenWidthMetrics
-                            : options.outWidth / screenWidthMetrics;
-                    if (sample < 1) {
-                        sample = 1;
-                    }
-                    options.inSampleSize = sample;
-                    options.inJustDecodeBounds = false;
-                    try {
-                        InputStream imageStream = mContext.getContentResolver().openInputStream(uri);
-                        bitmap = BitmapFactory.decodeStream(imageStream, null, options);
-                        imageStream.close();
-                    } catch (FileNotFoundException e) {
-                        bitmap = null;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
                     if (bitmap != null) {
                         if (bitmap.getHeight() >= screenWidthMetrics && bitmap.getWidth() >= screenWidthMetrics ) {
                             bitmap = ThumbnailUtils.centerSquareScaleBitmap(bitmap, screenWidthMetrics);
@@ -164,6 +183,7 @@ public class AlbumBitmapCacheHelper {
                 handler.sendMessage(msg);
             }
         });
+        imageView.setTag(R.id.tag_first, task);
     }
 
     public interface ILoadImageCallback {

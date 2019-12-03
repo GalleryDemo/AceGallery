@@ -22,7 +22,7 @@ public interface MediaDao {
     @Query("UPDATE MediaInfoEntity SET media_address = :mediaAddress WHERE media_id = :mediaId")
     void updateAddress(int mediaId, String mediaAddress);
 
-    @Query("DELETE FROM MediaInfoEntity WHERE media_id = :mediaId")
+    @Query("DELETE FROM mediaInfoEntity WHERE media_id = :mediaId")
     void delete(int mediaId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

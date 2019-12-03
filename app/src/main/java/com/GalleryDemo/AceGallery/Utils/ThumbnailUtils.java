@@ -24,13 +24,22 @@ public class ThumbnailUtils {
         
     }
 
-    public static String getFileName(String pathName) {
+    /*public static String getFileName(String pathName) {
         int start = pathName.lastIndexOf("/");
         if (start != -1) {
             return pathName.substring(start+1);
         } else {
             return null;
         }
+    }*/
+
+    public static int toHash(String key) {
+        int hashCode = 0;
+        for (int i = 0; i < key.length(); i++) {
+            int letterValue = key.charAt(i) - 96;
+            hashCode = (hashCode << 5) + letterValue;
+        }
+        return hashCode;
     }
 
     public static DisplayMetrics getScreenMetrics(Context context) {

@@ -35,7 +35,8 @@ public class AlbumBitmapCacheHelper {
     private volatile static AlbumBitmapCacheHelper instance = null;
     private LruCache<String, Bitmap> cache;
     private ArrayList<String> currentShowString;
-    ThreadPoolExecutor tpe = new ThreadPoolExecutor(2, 5, 10, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
+    int num = Runtime.getRuntime().availableProcessors();
+    ThreadPoolExecutor tpe = new ThreadPoolExecutor(num + 1, num + 2, 10, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
     private AlbumBitmapCacheHelper(Context mContext) {
         this.mContext = mContext;
@@ -125,6 +126,7 @@ public class AlbumBitmapCacheHelper {
                         }
                         options.inSampleSize = sample;
                         options.inJustDecodeBounds = false;
+                        options.inPreferredConfig = Bitmap.Config.RGB_565;
                         try {
                             InputStream imageStream = mContext.getContentResolver().openInputStream(uri);
                             bitmap = BitmapFactory.decodeStream(imageStream, null, options);

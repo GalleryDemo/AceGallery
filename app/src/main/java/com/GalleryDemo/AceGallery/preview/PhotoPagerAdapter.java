@@ -1,8 +1,6 @@
 package com.GalleryDemo.AceGallery.preview;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -18,11 +16,11 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
+import com.GalleryDemo.AceGallery.preview.image.ImageAsyncTaskHelper;
 import com.GalleryDemo.AceGallery.preview.image.ZoomImageView;
 import com.GalleryDemo.AceGallery.preview.video.VideoSurfaceFragment;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +66,12 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
         } else if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
             Log.d(TAG, "instantiateItem: PhotoPosition = " + position);
-            View photoView = instantiatePhotoItem(position);
+            View photoView = null;
+            try {
+                photoView = instantiatePhotoItem(position);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             container.addView(photoView);
             return photoView;
@@ -85,18 +88,13 @@ public class PhotoPagerAdapter extends PagerAdapter {
         container.removeView(view);
     }
 
-    private View instantiatePhotoItem(int position) {
+    private View instantiatePhotoItem(int position) throws IOException {
         View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.widget_zoom_image, null);
         final ZoomImageView zoomImageView = view.findViewById(R.id.photoImage);
-        Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
-        Bitmap bitmap = null;
-        try {
-            InputStream inputStream = mContext.getContentResolver().openInputStream(photoUri);
-            bitmap = BitmapFactory.decodeStream(inputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        zoomImageView.setSourceImageBitmap(bitmap, ApplicationContextUtils.getContext());
+        final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
+
+        ImageAsyncTaskHelper imageAsyncTaskHelper = new ImageAsyncTaskHelper(zoomImageView, mContext);
+        imageAsyncTaskHelper.execute(photoUri);
         return view;
     }
 
@@ -123,7 +121,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
         Uri videoUri = Uri.parse(videoItem.getMediaStringUri());
         MediaMetadataRetriever video = new MediaMetadataRetriever();
         video.setDataSource(mContext, videoUri);
-        mVideo.setImageBitmap(video.getFrameAtTime());
+        ImageAsyncTaskHelper imageAsyncTaskHelper = new ImageAsyncTaskHelper(mVideo, mContext);
+        imageAsyncTaskHelper.execute(videoUri);
 
         return view;
     }

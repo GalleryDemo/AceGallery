@@ -53,6 +53,7 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
         Cursor mCursor = (Cursor) data; //接收返回的cursor
         while (mCursor.moveToNext()) {
             //拼接获取多媒体资源的Uri
+            //String mediaPath = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DOCUMENT_ID));
             int mediaId = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID));
             Uri mediaUri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), mediaId + "");
             //Todo: recover the location method

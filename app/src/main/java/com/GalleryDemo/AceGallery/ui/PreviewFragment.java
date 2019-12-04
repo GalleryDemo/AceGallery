@@ -30,7 +30,6 @@ public class PreviewFragment extends BaseFragment {
 
     private MediaInfoViewModel mViewModel;
 
-    private MediaInfoEntity mediaInfoEntity;
     private List<MediaInfoEntity> mPagerList = new ArrayList<>();
 
 
@@ -72,12 +71,12 @@ public class PreviewFragment extends BaseFragment {
             }
         });
 
-        mediaInfoEntity = (MediaInfoEntity) getArguments().getSerializable(EXTRA_PAGER_MEDIA_ITEM);
+        MediaInfoEntity mediaInfoEntity = (MediaInfoEntity) getArguments().getSerializable(EXTRA_PAGER_MEDIA_ITEM);
 
         mViewPager.setAdapter(mPhotoPagerAdapter);
         mPagerList = mPhotoPagerAdapter.getPagerList();
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setCurrentItem(getPhotoPositionByItemPosition(mediaInfoEntity));
-        mediaInfoEntity = mPagerList.get(mViewPager.getCurrentItem());
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

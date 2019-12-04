@@ -77,7 +77,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public class BodyViewHolder extends RecyclerView.ViewHolder {
+    public class BodyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView mPhoto;
         public ImageView mFavorImage;
@@ -113,10 +113,19 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mPhotoLocation = itemView.findViewById(R.id.media_location_tiny);
             mMediaType = itemView.findViewById(R.id.media_type_tiny);
             mMoreButton = itemView.findViewById(R.id.more_button_tiny);
+            mMoreButton.setOnClickListener(this);
 
-            mMoreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            mVideoLength = itemView.findViewById(R.id.video_length_tiny);
+            mPhotoType = itemView.findViewById(R.id.photo_type_tiny);
+
+            mFavorImage.setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.more_button_tiny:
                     PopupMenu popupMenu = new PopupMenu(getContext(),itemView);
                     final MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.item_time_line, popupMenu.getMenu());
@@ -138,17 +147,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             return false;
                         }
                     });
-
                     popupMenu.show();
-                }
-
-            });
-            mVideoLength = itemView.findViewById(R.id.video_length_tiny);
-            mPhotoType = itemView.findViewById(R.id.photo_type_tiny);
-
-            mFavorImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                    break;
+                case R.id.favor_tiny:
                     MediaInfoEntity favorEntity = mItemList.get(getAdapterPosition());
                     if (favorEntity.isFavor()) {
                         mFavorImage.clearColorFilter();
@@ -158,11 +159,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         favorEntity.setFavor(true);
                     }
                     mViewModel.update(favorEntity);
-                }
-            });
+                    break;
+            }
         }
-
-
     }
 
     public class FootViewHolder extends RecyclerView.ViewHolder {

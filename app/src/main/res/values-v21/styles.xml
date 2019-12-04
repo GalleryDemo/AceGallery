@@ -18,4 +18,25 @@
         <item name="android:popupBackground">@color/colorGalleryWeekBlack</item>
     </style>
 
+    <style name="RecyclerViewScroller" >
+        <item name="android:scrollbarThumbVertical">@drawable/scroller</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+    </style>
+
+<!--
+    <style name="ZoomItemRecyclerView_style">
+        <item name="android:fastScrollEnabled">true</item>
+        <item name="android:state_pressed">true</item>
+        <item name="android:scrollbarThumbVertical">@color/colorPrimary</item>
+        <item name="android:scrollbarTrackVertical">@color/colorAccent</item>
+        &lt;!&ndash;<item name="android:layout_marginRight">10dp</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:layout_marginLeft">10dp</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:scrollbarSize">5dp</item>&ndash;&gt;
+        <item name="android:overScrollMode">never</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
+    </style>
+-->
+
 </resources>

@@ -20,7 +20,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/photo_recycler_view"/>
+        android:id="@+id/photo_recycler_view"
+        app:fastScrollEnabled="true"
+        app:fastScrollVerticalThumbDrawable="@drawable/scroller_thumb_drawable"
+        app:fastScrollVerticalTrackDrawable="@drawable/scroller_background"
+        app:fastScrollHorizontalThumbDrawable="@drawable/scroller_thumb_drawable"
+        app:fastScrollHorizontalTrackDrawable="@drawable/scroller_background" />
 
 </LinearLayout>
 

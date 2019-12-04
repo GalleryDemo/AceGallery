@@ -32,10 +32,10 @@
 
     <ImageView
         android:id="@+id/favor_tiny"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:alpha="0.85"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@id/info_bar_tiny"
         app:layout_constraintStart_toStartOf="@id/info_bar_tiny"
         app:layout_constraintTop_toTopOf="@id/info_bar_tiny"
@@ -99,11 +99,11 @@
 
     <ImageView
         android:id="@+id/more_button_tiny"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginEnd="0dp"
         android:alpha="0.85"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         android:src="@drawable/more_button_tiny"
         app:layout_constraintBottom_toBottomOf="@+id/info_bar_tiny"
         app:layout_constraintEnd_toEndOf="@+id/photo_image"

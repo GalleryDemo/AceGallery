@@ -238,6 +238,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             else {
                 bodyHolder.mPhotoLocation.setText("");
             }*/
+            bodyHolder.mPhoto.setImageResource(R.mipmap.ic_launcher);
 
             Uri imageUri = Uri.parse(entity.getMediaStringUri());
 

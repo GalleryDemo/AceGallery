@@ -18,11 +18,7 @@
         <item name="android:popupBackground">@color/colorGalleryWeekBlack</item>
     </style>
 
-    <style name="RecyclerViewScroller" >
-        <item name="android:scrollbarThumbVertical">@drawable/scroller</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarStyle">outsideOverlay</item>
-    </style>
+
 
 <!--
     <style name="ZoomItemRecyclerView_style">

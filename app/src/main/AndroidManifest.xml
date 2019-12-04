@@ -22,7 +22,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="V7a8Fv77avnOm28vK65FcPMnUhOaGCut"/>
-        <activity android:name=".ui.GalleryTimeLineActivity">
+        <activity android:name=".GalleryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

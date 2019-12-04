@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.Utils;
+package com.GalleryDemo.AceGallery.loader;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

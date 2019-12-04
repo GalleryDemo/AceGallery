@@ -1,10 +1,12 @@
-package com.GalleryDemo.AceGallery.Utils;
+package com.GalleryDemo.AceGallery.timeline;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+
+import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 
 
 public class ThumbnailUtils {

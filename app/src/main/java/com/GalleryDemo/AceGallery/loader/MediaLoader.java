@@ -13,7 +13,6 @@ import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
-import com.GalleryDemo.AceGallery.Utils.LoaderUtils;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.database.MediaInfoRepository;
 

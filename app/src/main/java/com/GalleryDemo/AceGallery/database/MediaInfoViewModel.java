@@ -1,13 +1,10 @@
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery.database;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
-import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
-import com.GalleryDemo.AceGallery.database.MediaInfoRepository;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -17,7 +14,7 @@ public class MediaInfoViewModel extends AndroidViewModel {
     private MediaInfoRepository mRepository;
     private LiveData<List<MediaInfoEntity>> items;
 
-    private LiveData<List<MediaInfoEntity>> timeLineItems;
+    private LiveData<List<Integer>> timeLineItems;
 
     public MediaInfoViewModel(@NonNull Application application) {
         super(application);
@@ -30,6 +27,14 @@ public class MediaInfoViewModel extends AndroidViewModel {
         }
 
         return items;
+    }
+
+    public LiveData<List<Integer>> getTimeLineItems() {
+        return timeLineItems;
+    }
+
+    public void setTimeLineItems(LiveData<List<Integer>> timeLineItems) {
+        this.timeLineItems = timeLineItems;
     }
 
     public MediaInfoEntity getItem(int mediaId) throws ExecutionException, InterruptedException {

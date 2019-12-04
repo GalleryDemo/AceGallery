@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.ui.view;
+package com.GalleryDemo.AceGallery.preview.image;
 
 
 import android.content.Context;

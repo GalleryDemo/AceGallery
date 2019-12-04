@@ -4,7 +4,7 @@
  * @version 1.0
  */
 
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -18,18 +18,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.PermissionHelper;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.loader.MediaLoader;
+import com.GalleryDemo.AceGallery.timeline.GalleryTimeLineFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryTimeLineActivity extends BaseActivity {
+public class GalleryActivity extends BaseActivity {
 
-    private static final String TAG = "GalleryTimeLineActivity";
+    private static final String TAG = "GalleryActivity";
 
 
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
@@ -74,7 +74,7 @@ public class GalleryTimeLineActivity extends BaseActivity {
         if(PermissionHelper.hasPermissions(this)){
             getSupportLoaderManager().restartLoader(0, null, new MediaLoader(this));
         }else {
-            PermissionHelper.requsetPermissions(GalleryTimeLineActivity.this, PERMISSIONS_REQUEST_CODE);
+            PermissionHelper.requsetPermissions(GalleryActivity.this, PERMISSIONS_REQUEST_CODE);
         }
     }
 
@@ -154,7 +154,7 @@ public class GalleryTimeLineActivity extends BaseActivity {
                 for (int i = 0; i < grantResults.length; i++) {
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         isPermissionAllowed = false;
-                        Toast.makeText(GalleryTimeLineActivity.this, "???\n主动点自己开", Toast.LENGTH_LONG).show();
+                        Toast.makeText(GalleryActivity.this, "???\n主动点自己开", Toast.LENGTH_LONG).show();
                         break;
                     }
                 }

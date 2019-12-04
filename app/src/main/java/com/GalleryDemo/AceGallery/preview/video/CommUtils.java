@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.Utils;
+package com.GalleryDemo.AceGallery.preview.video;
 
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;

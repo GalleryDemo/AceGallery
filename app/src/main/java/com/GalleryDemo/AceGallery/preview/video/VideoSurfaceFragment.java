@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery.preview.video;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,14 +11,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.GalleryDemo.AceGallery.R;
-import com.GalleryDemo.AceGallery.Utils.CommUtils;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
-import com.GalleryDemo.AceGallery.ui.view.VideoSurfaceView;
+import com.GalleryDemo.AceGallery.BaseFragment;
 
 public class VideoSurfaceFragment extends BaseFragment implements View.OnClickListener {
     private static final String TAG = "VideoSurfaceFragment";
 
-    private static final String EXTRA_PAGER_VIDEO_ITEM = "package com.GalleryDemo.AceGallery.ui.VideoSurfaceFragment.mVideoInfoEntity";
+    private static final String EXTRA_PAGER_VIDEO_ITEM = "package com.GalleryDemo.AceGallery.preview.video.VideoSurfaceFragment.mVideoInfoEntity";
 
     private MediaInfoEntity mVideoInfoEntity;
     private ImageView mPlay;

@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.adapter;
+package com.GalleryDemo.AceGallery.preview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,9 +18,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
-import com.GalleryDemo.AceGallery.ui.PreviewFragment;
-import com.GalleryDemo.AceGallery.ui.VideoSurfaceFragment;
-import com.GalleryDemo.AceGallery.ui.view.ZoomImageView;
+import com.GalleryDemo.AceGallery.preview.image.ZoomImageView;
+import com.GalleryDemo.AceGallery.preview.video.VideoSurfaceFragment;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;

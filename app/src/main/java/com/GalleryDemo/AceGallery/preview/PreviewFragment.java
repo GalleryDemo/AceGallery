@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery.preview;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,15 +12,16 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.GalleryDemo.AceGallery.R;
-import com.GalleryDemo.AceGallery.adapter.PhotoPagerAdapter;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
+import com.GalleryDemo.AceGallery.database.MediaInfoViewModel;
+import com.GalleryDemo.AceGallery.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PreviewFragment extends BaseFragment {
 
-    private static final String EXTRA_PAGER_MEDIA_ITEM = "com.GalleryDemo.AceGallery.ui.PreviewFragment.mediaInfoEntity";
+    private static final String EXTRA_PAGER_MEDIA_ITEM = "com.GalleryDemo.AceGallery.preview.PreviewFragment.mediaInfoEntity";
 
     private Toolbar mToolbar;
     private ViewPager mViewPager;

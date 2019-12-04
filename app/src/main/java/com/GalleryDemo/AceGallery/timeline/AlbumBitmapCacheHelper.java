@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.Utils;
+package com.GalleryDemo.AceGallery.timeline;
 
 import android.content.Context;
 import android.graphics.Bitmap;

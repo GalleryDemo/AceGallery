@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.Utils;
+package com.GalleryDemo.AceGallery.timeline;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,7 +15,7 @@ public class GridItemDividerDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
     private RecyclerView.Adapter adapter;
 
-    public GridItemDividerDecoration(Context context, RecyclerView.Adapter adapter) {
+    GridItemDividerDecoration(Context context, RecyclerView.Adapter adapter) {
         final TypedArray typedArray = context.obtainStyledAttributes(attrs);
         mDivider = typedArray.getDrawable(0);
         typedArray.recycle(); //释放TypedArray实现复用，程序内部维护着一个TypedArray池，防止频繁创建TypedArray

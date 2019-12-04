@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/black">
 
-        <com.GalleryDemo.AceGallery.ui.view.VideoSurfaceView
+        <com.GalleryDemo.AceGallery.preview.video.VideoSurfaceView
             android:id="@+id/video_surface_view"
             android:layout_centerInParent="true"
             android:layout_width="match_parent"

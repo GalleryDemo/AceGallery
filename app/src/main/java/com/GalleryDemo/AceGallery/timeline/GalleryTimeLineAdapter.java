@@ -6,7 +6,7 @@
  */
 
 
-package com.GalleryDemo.AceGallery.adapter;
+package com.GalleryDemo.AceGallery.timeline;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,12 +29,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
-import com.GalleryDemo.AceGallery.Utils.AlbumBitmapCacheHelper;
 import com.GalleryDemo.AceGallery.database.MediaDatabase;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
-import com.GalleryDemo.AceGallery.ui.GalleryTimeLineFragment;
-import com.GalleryDemo.AceGallery.ui.MediaInfoViewModel;
-import com.GalleryDemo.AceGallery.ui.PreviewFragment;
+import com.GalleryDemo.AceGallery.database.MediaInfoViewModel;
+import com.GalleryDemo.AceGallery.preview.PreviewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +58,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private MediaInfoEntity entity;
 
-    public GalleryTimeLineAdapter(Context mContext, GalleryTimeLineFragment fragment) {
+    GalleryTimeLineAdapter(Context mContext, GalleryTimeLineFragment fragment) {
         this.mContext = mContext;
         this.fragment = fragment;
         this.mViewModel = ViewModelProviders.of(fragment).get(MediaInfoViewModel.class);
@@ -69,9 +67,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public class HeadViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView time_line;
+        TextView time_line;
 
-        public HeadViewHolder(View itemView) {
+        HeadViewHolder(View itemView) {
             super(itemView);
             time_line = itemView.findViewById(R.id.time_line_title);
         }
@@ -79,17 +77,17 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public class BodyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ImageView mPhoto;
-        public ImageView mFavorImage;
-        public TextView mPhotoDate;
-        public TextView mPhotoLocation;
-        public ImageView mMediaType;
-        public ImageView mMoreButton;
-        public TextView mVideoLength;
-        public TextView mPhotoType;
+        ImageView mPhoto;
+        ImageView mFavorImage;
+        TextView mPhotoDate;
+        TextView mPhotoLocation;
+        ImageView mMediaType;
+        ImageView mMoreButton;
+        TextView mVideoLength;
+        TextView mPhotoType;
 
 
-        public BodyViewHolder(final View itemView) {
+        BodyViewHolder(final View itemView) {
             super(itemView);
             mPhoto = itemView.findViewById(R.id.photo_image);
 
@@ -166,9 +164,9 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public class FootViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mStatView;
+        TextView mStatView;
 
-        public FootViewHolder(@NonNull View itemView) {
+        FootViewHolder(@NonNull View itemView) {
             super(itemView);
             mStatView = itemView.findViewById(R.id.stat_bottom);
         }
@@ -296,7 +294,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     //把全部数据的列表分成body和head
-    public void setAdapterList(List<MediaInfoEntity> list) {
+    void setAdapterList(List<MediaInfoEntity> list) {
         List<Integer> headList = new ArrayList<>();
         String lastDate = null;
         for (int i = 0;i < list.size();i ++) {

@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery.timeline;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,13 +14,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
-import com.GalleryDemo.AceGallery.Utils.GridItemDividerDecoration;
-import com.GalleryDemo.AceGallery.Utils.PermissionHelper;
-import com.GalleryDemo.AceGallery.adapter.GalleryTimeLineAdapter;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
-import com.GalleryDemo.AceGallery.loader.MediaLoader;
+import com.GalleryDemo.AceGallery.database.MediaInfoViewModel;
+import com.GalleryDemo.AceGallery.BaseFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils.BODY_TYPE;
@@ -35,8 +32,6 @@ public class GalleryTimeLineFragment extends BaseFragment {
     private GalleryTimeLineAdapter mTimeLineAdapter;
     private MediaInfoViewModel mViewModel;
     private Toolbar mToolbar;
-
-    private List<MediaInfoEntity> mItemList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

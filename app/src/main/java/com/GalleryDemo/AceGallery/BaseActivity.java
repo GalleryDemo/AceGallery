@@ -1,4 +1,4 @@
-package com.GalleryDemo.AceGallery.ui;
+package com.GalleryDemo.AceGallery;
 
 import android.os.Bundle;
 

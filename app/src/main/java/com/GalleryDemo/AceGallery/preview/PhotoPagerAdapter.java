@@ -92,9 +92,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         View view = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.widget_zoom_image, null);
         final ZoomImageView zoomImageView = view.findViewById(R.id.photoImage);
         final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
-
-        ImageAsyncTaskHelper imageAsyncTaskHelper = new ImageAsyncTaskHelper(zoomImageView, mContext);
-        imageAsyncTaskHelper.execute(photoUri);
+        new ImageAsyncTaskHelper.photoAsyncTask(zoomImageView, mContext).execute(photoUri);
         return view;
     }
 
@@ -104,7 +102,12 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
         ImageView mVideo = view.findViewById(R.id.video_picture);
         ImageView mPlayVideo = view.findViewById(R.id.play_video);
-        mPlayVideo.setImageResource(R.drawable.video_iconl);
+
+        mPlayVideo.setImageResource(R.drawable.video_icon);
+        Uri videoUri = Uri.parse(videoItem.getMediaStringUri());
+        MediaMetadataRetriever video = new MediaMetadataRetriever();
+        video.setDataSource(mContext, videoUri);
+        new ImageAsyncTaskHelper.videoPickAsyncTask(mVideo).execute(video);
         mPlayVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,11 +121,9 @@ public class PhotoPagerAdapter extends PagerAdapter {
             }
         });
 
-        Uri videoUri = Uri.parse(videoItem.getMediaStringUri());
-        MediaMetadataRetriever video = new MediaMetadataRetriever();
-        video.setDataSource(mContext, videoUri);
-        ImageAsyncTaskHelper imageAsyncTaskHelper = new ImageAsyncTaskHelper(mVideo, mContext);
-        imageAsyncTaskHelper.execute(videoUri);
+
+
+
 
         return view;
     }

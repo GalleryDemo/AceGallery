@@ -3,6 +3,7 @@ package com.GalleryDemo.AceGallery.preview.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -14,51 +15,69 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
-public class ImageAsyncTaskHelper extends AsyncTask<Uri, Void, Bitmap> {
-
+public class ImageAsyncTaskHelper  {
 
     private static final String TAG = "ImageAsyncTaskHelper";
 
-    private final WeakReference<ImageView> imageViewReference;
-    private Context mContext;
+    public static class photoAsyncTask extends AsyncTask<Uri, Void, Bitmap> {
 
-    public ImageAsyncTaskHelper(ImageView imageView, Context context) {
-        this.imageViewReference = new WeakReference<>(imageView);
-        this.mContext = context;
-    }
+        private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<Context> contextWeakReference;
 
-
-    @Override
-    protected Bitmap doInBackground(Uri... uris) {
-        Bitmap bitmap = null;
-        try {
-            InputStream inputStream = mContext.getContentResolver().openInputStream(uris[0]);
-            bitmap = BitmapFactory.decodeStream(inputStream);
-            if (bitmap == null) {
-                Log.d(TAG, "doInBackground: fuck you!");
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        public photoAsyncTask(ImageView imageView, Context context) {
+            this.imageViewReference = new WeakReference<>(imageView);
+            this.contextWeakReference = new WeakReference<>(context);
         }
-        return bitmap;
+
+        @Override
+        protected Bitmap doInBackground(Uri... uris) {
+            Bitmap bitmap = null;
+            try {
+                InputStream inputStream = contextWeakReference.get().getContentResolver().openInputStream(uris[0]);
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (imageViewReference != null && bitmap != null) {
+                if (imageViewReference.get() instanceof  ZoomImageView) {
+                    final ZoomImageView zoomImageView = (ZoomImageView) imageViewReference.get();
+                    if (zoomImageView != null) {
+                        Log.d(TAG, "onPostExecute: fuck you!");
+                        zoomImageView.setSourceImageBitmap(bitmap, ApplicationContextUtils.getContext());
+                    }
+                }
+            }
+        }
     }
 
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        if (imageViewReference != null && bitmap != null) {
+    public static class videoPickAsyncTask extends AsyncTask<MediaMetadataRetriever, Void, Bitmap> {
 
-            if (imageViewReference.get() instanceof  ZoomImageView) {
-                final ZoomImageView zoomImageView = (ZoomImageView) imageViewReference.get();
-                if (zoomImageView != null) {
-                    Log.d(TAG, "onPostExecute: fuck you!");
-                    zoomImageView.setSourceImageBitmap(bitmap, ApplicationContextUtils.getContext());
-                }
-            } else {
-                final ImageView imageView = imageViewReference.get();
+        private final WeakReference<ImageView> retrieverViewReference;
+
+        public videoPickAsyncTask(ImageView imageView) {
+            this.retrieverViewReference = new WeakReference<>(imageView);
+        }
+
+        @Override
+        protected Bitmap doInBackground(MediaMetadataRetriever... mediaMetadataRetrievers) {
+            return mediaMetadataRetrievers[0].getFrameAtTime();
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (retrieverViewReference != null && bitmap != null) {
+                final ImageView imageView = retrieverViewReference.get();
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
+                    Log.d(TAG, "onPostExecute: this should work");
                 }
             }
         }
     }
+
 }

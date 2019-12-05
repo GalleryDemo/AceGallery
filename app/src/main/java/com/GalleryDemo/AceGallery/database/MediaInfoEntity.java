@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 @Entity(tableName = "mediaInfoEntity",
-        indices = {@Index(value = "media_id"/*, unique = true*/)})
+        indices = {@Index(value = "media_id", unique = true)})
 public class MediaInfoEntity implements Serializable {
 
     @PrimaryKey(autoGenerate = true)

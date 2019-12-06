@@ -5,16 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import com.GalleryDemo.AceGallery.BaseFragment;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.database.MediaInfoViewModel;
-import com.GalleryDemo.AceGallery.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class PreviewFragment extends BaseFragment {
     protected void initView(View view, Bundle savedInstanceState) {
         mToolbar = view.findViewById(R.id.preview_toolbar);
         mToolbar.setNavigationIcon(R.drawable.left_sidebar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        //((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         setHasOptionsMenu(true);
         mViewPager = view.findViewById(R.id.viewpager);
 

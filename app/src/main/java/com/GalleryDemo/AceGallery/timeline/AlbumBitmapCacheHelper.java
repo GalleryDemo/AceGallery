@@ -40,7 +40,7 @@ public class AlbumBitmapCacheHelper {
 
     private AlbumBitmapCacheHelper(Context mContext) {
         this.mContext = mContext;
-        final int memory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 4);
+        /*final int memory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 4);
         Log.d(TAG, "AlbumBitmapCacheHelper: " + memory);
 
         cache = new LruCache<String, Bitmap>(memory) {
@@ -48,9 +48,8 @@ public class AlbumBitmapCacheHelper {
             protected int sizeOf(String key, Bitmap value) {
                 return value.getRowBytes() * value.getHeight() / 1024;
             }
-        };
+        };*/
 
-        currentShowString = new ArrayList<String>();
     }
 
     public static AlbumBitmapCacheHelper getInstance(Context mContext) {
@@ -64,12 +63,10 @@ public class AlbumBitmapCacheHelper {
         return instance;
     }
 
-    public Bitmap getBitmap(final Uri uri, final MediaInfoEntity mediaInfoEntity, final ImageView imageView, final ILoadImageCallback callback){
-        Bitmap bitmap = getBitmapFromCache(uri.toString(), mediaInfoEntity.getMediaWidth(), mediaInfoEntity.getMediaHeight());
-        if (bitmap == null) {
-            decodeBitmapFromPath(uri, mediaInfoEntity, callback, imageView);
-        }
-        return bitmap;
+    public void getBitmap(final Uri uri, final MediaInfoEntity mediaInfoEntity, final ImageView imageView, final ILoadImageCallback callback){
+
+        decodeBitmapFromPath(uri, mediaInfoEntity, callback, imageView);
+
     }
 
     private void decodeBitmapFromPath(final Uri uri, final MediaInfoEntity mediaInfoEntity, final ILoadImageCallback callback, final ImageView imageView) throws OutOfMemoryError {
@@ -177,9 +174,6 @@ public class AlbumBitmapCacheHelper {
                         e.printStackTrace();
                     }
                 }
-                if (bitmap != null) {
-                    cache.put(uri.toString() + "_" + width + "_" + height, bitmap);
-                }
                 Message msg = Message.obtain();
                 msg.obj = bitmap;
                 handler.sendMessage(msg);
@@ -192,7 +186,4 @@ public class AlbumBitmapCacheHelper {
         void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView);
     }
 
-    private Bitmap getBitmapFromCache(final String path, int width, int height) {
-        return cache.get(path + "_" + width + "_" +height);
-    }
 }

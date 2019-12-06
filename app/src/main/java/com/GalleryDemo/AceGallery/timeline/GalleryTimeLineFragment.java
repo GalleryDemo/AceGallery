@@ -6,17 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.GalleryDemo.AceGallery.BaseFragment;
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.database.MediaInfoViewModel;
-import com.GalleryDemo.AceGallery.BaseFragment;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class GalleryTimeLineFragment extends BaseFragment {
     protected void initView(View view, Bundle savedInstanceState) {
 
         mToolbar = view.findViewById(R.id.time_line_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        //((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         setHasOptionsMenu(true);
         mToolbar.setNavigationIcon(R.drawable.left_sidebar);
         mRecyclerView = view.findViewById(R.id.photo_recycler_view);
@@ -98,6 +97,8 @@ public class GalleryTimeLineFragment extends BaseFragment {
             getActivity().getSupportLoaderManager().initLoader(0, null, new MediaLoader(getActivity()));
         }*/
     }
+
+
 
 
 }

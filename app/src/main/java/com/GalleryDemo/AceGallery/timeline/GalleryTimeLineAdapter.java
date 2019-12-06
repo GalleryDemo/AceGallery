@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
+import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 import com.GalleryDemo.AceGallery.database.MediaDatabase;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.database.MediaInfoViewModel;
@@ -61,7 +62,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     GalleryTimeLineAdapter(Context mContext, GalleryTimeLineFragment fragment) {
         this.mContext = mContext;
         this.fragment = fragment;
-        this.mViewModel = ViewModelProviders.of(fragment).get(MediaInfoViewModel.class);
+        this.mViewModel = ViewModelProviders.of(fragment.getActivity()).get(MediaInfoViewModel.class);
 
     }
 
@@ -243,7 +244,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             bodyHolder.mPhoto.setTag(imageUri.toString());
             String string= bodyHolder.mPhoto.getTag().toString();
 
-                Bitmap bitmap = AlbumBitmapCacheHelper.getInstance(getContext()).getBitmap(imageUri, mItemList.get(position), bodyHolder.mPhoto, new AlbumBitmapCacheHelper.ILoadImageCallback() {
+                AlbumBitmapCacheHelper.getInstance(ApplicationContextUtils.getContext()).getBitmap(imageUri, mItemList.get(position), bodyHolder.mPhoto, new AlbumBitmapCacheHelper.ILoadImageCallback() {
                             @Override
                             public void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView) {
                                 if (bitmap == null) {
@@ -254,9 +255,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                 }
                             }
                         });
-                if (bitmap != null) {
-                    bodyHolder.mPhoto.setImageBitmap(bitmap);
-                }
 
             bodyHolder.mPhotoDate.setText(entity.getMediaDate());
             bodyHolder.mPhotoLocation.setText(entity.getMediaAddress());
@@ -322,9 +320,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         this.mHeadPositionList = headList;
     }
-
-
-
 
     public Context getContext() {
         return mContext;

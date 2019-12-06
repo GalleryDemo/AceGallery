@@ -164,6 +164,7 @@ public class ZoomImageView extends AppCompatImageView {
      * @param context
      */
     public void setSourceImageBitmap(Bitmap bitmap, Context context) {
+        currentStatus = STATUS_INIT;
         sourceBitmap = bitmap;
 /*
         int screenWidth = ((WindowManager) (AppContext.getInstance().getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay().getWidth();

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -25,7 +26,7 @@ public class PreviewFragment extends BaseFragment {
     private Toolbar mToolbar;
     private ViewPager mViewPager;
 
-
+    private Observer<List<MediaInfoEntity>> mListObserver;
     private PhotoPagerAdapter mPhotoPagerAdapter;
 
     private MediaInfoViewModel mViewModel;
@@ -57,19 +58,32 @@ public class PreviewFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mViewModel.getAllItems().removeObserver(mListObserver);
+    }
 
     @Override
     protected void initData(View view, Bundle savedInstanceState) {
-        mPhotoPagerAdapter = new PhotoPagerAdapter(getContext(),this);
 
+        mPhotoPagerAdapter = new PhotoPagerAdapter(getContext(),this);
         mViewModel = ViewModelProviders.of(getActivity()).get(MediaInfoViewModel.class);
 
-        mViewModel.getAllItems().observe(getActivity(), new Observer<List<MediaInfoEntity>>() {
+        mListObserver = new Observer<List<MediaInfoEntity>>() {
             @Override
             public void onChanged(List<MediaInfoEntity> mediaInfoEntities) {
                 mPhotoPagerAdapter.updateItemList(mediaInfoEntities);
             }
-        });
+        };
+        mViewModel.getAllItems().observe(getActivity(), mListObserver);
 
         MediaInfoEntity mediaInfoEntity = (MediaInfoEntity) getArguments().getSerializable(EXTRA_PAGER_MEDIA_ITEM);
 

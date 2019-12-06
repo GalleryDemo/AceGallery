@@ -8,7 +8,7 @@
         android:id="@+id/test_sur_rl_sv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black">
+        android:background="@color/colorGalleryWeekBlack">
 
         <com.GalleryDemo.AceGallery.preview.video.VideoSurfaceView
             android:id="@+id/video_surface_view"

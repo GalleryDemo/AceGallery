@@ -20,10 +20,14 @@ import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.preview.image.ImageAsyncTaskHelper;
 import com.GalleryDemo.AceGallery.preview.image.ZoomImageView;
+import com.GalleryDemo.AceGallery.preview.image.map.ImageSurfaceView;
 import com.GalleryDemo.AceGallery.preview.video.VideoSurfaceFragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +56,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
     }
 
     class PhotoViewHolder {
-        ZoomImageView zoomImageView = null;
+        //ZoomImageView zoomImageView = null;
+        ImageSurfaceView imageSurfaceView =null;
     }
 
     class VideoViewHolder {
@@ -101,7 +106,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
         Log.d(TAG, "destroyItem: View class is = " + object.getClass());
         if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
             Log.d(TAG, "destroyItem: destroy zoom");
-            ZoomImageView zoomImageView = ((PhotoViewHolder)view.getTag()).zoomImageView;
+            //ZoomImageView zoomImageView = ((PhotoViewHolder)view.getTag()).zoomImageView;
+            ImageSurfaceView imageSurfaceView = ((PhotoViewHolder)view.getTag()).imageSurfaceView;
 /*            Bitmap bitmap = ((BitmapDrawable)zoomImageView.getDrawable()).getBitmap();
             bitmap.recycle();*/
  /*           zoomImageView.setSourceImageBitmap(null, mContext);*/
@@ -128,7 +134,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         if (mPhotoViews.size() == 0) {
             photoViewHolder = new PhotoViewHolder();
             convertView = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.widget_zoom_image, null);
-            photoViewHolder.zoomImageView = convertView.findViewById(R.id.photoImage);
+            photoViewHolder.imageSurfaceView = convertView.findViewById(R.id.photoImage);
             convertView.setTag(photoViewHolder);
         } else {
             convertView = mPhotoViews.removeFirst();
@@ -136,7 +142,19 @@ public class PhotoPagerAdapter extends PagerAdapter {
         }
 
         final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
-        new ImageAsyncTaskHelper.photoAsyncTask(photoViewHolder.zoomImageView, mContext).execute(photoUri);
+        InputStream is = null;
+        try {
+            is = mContext.getContentResolver().openInputStream(photoUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            photoViewHolder.imageSurfaceView.setInputStream(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        photoViewHolder.imageSurfaceView.setViewportCenter();
+        //new ImageAsyncTaskHelper.photoAsyncTask(photoViewHolder.zoomImageView, mContext).execute(photoUri);
         return convertView;
     }
 

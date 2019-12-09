@@ -142,18 +142,19 @@ public class PhotoPagerAdapter extends PagerAdapter {
         }
 
         final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
-        InputStream is = null;
+/*        InputStream is = null;
         try {
             is = mContext.getContentResolver().openInputStream(photoUri);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
         try {
-            photoViewHolder.imageSurfaceView.setInputStream(is);
+            photoViewHolder.imageSurfaceView.setInputStream(mContext,photoUri);
         } catch (IOException e) {
             e.printStackTrace();
         }
         photoViewHolder.imageSurfaceView.setViewportCenter();
+
         //new ImageAsyncTaskHelper.photoAsyncTask(photoViewHolder.zoomImageView, mContext).execute(photoUri);
         return convertView;
     }

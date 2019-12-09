@@ -1,5 +1,6 @@
 package com.GalleryDemo.AceGallery.preview.image.view;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
@@ -46,6 +48,33 @@ public class InputStreamScene extends Scene {
     static {
         options.inPreferredConfig = Bitmap.Config.RGB_565;
     }
+
+    public InputStreamScene(Context context, Uri uri) throws IOException {
+        InputStream inputStream;
+
+        inputStream = context.getContentResolver().openInputStream(uri);
+
+        BitmapFactory.Options tmpOptions = new BitmapFactory.Options();
+
+        this.decoder = BitmapRegionDecoder.newInstance(inputStream, false);
+
+        inputStream = context.getContentResolver().openInputStream(uri);
+        // Grab the bounds for the scene dimensions
+        tmpOptions.inJustDecodeBounds = true;
+        //inputStream.reset();
+        BitmapFactory.decodeStream(inputStream, null, tmpOptions);
+        setSceneSize(tmpOptions.outWidth, tmpOptions.outHeight);
+
+        inputStream = context.getContentResolver().openInputStream(uri);
+        //inputStream.reset();
+        // Create the sample image
+        tmpOptions.inJustDecodeBounds = false;
+        tmpOptions.inSampleSize = (1<< DOWN_SAMPLE_SHIFT);
+        sampleBitmap = BitmapFactory.decodeStream(inputStream, null, tmpOptions);
+
+        initialize();
+    }
+
 
     public InputStreamScene(InputStream inputStream) throws IOException {
         BitmapFactory.Options tmpOptions = new BitmapFactory.Options();

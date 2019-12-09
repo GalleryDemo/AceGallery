@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -77,6 +78,10 @@ public class ImageSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
     public void setInputStream(InputStream inputStream) throws IOException {
         scene = new InputStreamScene(inputStream);
+    }
+
+    public void setInputStream(Context context, Uri uri) throws IOException {
+        scene = new InputStreamScene(context,uri);
     }
 
     //endregion

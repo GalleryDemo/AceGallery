@@ -53,7 +53,6 @@ public class GalleryTimeLineFragment extends BaseFragment {
     protected void initView(View view, Bundle savedInstanceState) {
 
         mToolbar = view.findViewById(R.id.time_line_toolbar);
-        //((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         setHasOptionsMenu(true);
         mToolbar.setNavigationIcon(R.drawable.left_sidebar);
         mRecyclerView = view.findViewById(R.id.photo_recycler_view);
@@ -93,9 +92,7 @@ public class GalleryTimeLineFragment extends BaseFragment {
         });
         mRecyclerView.addItemDecoration(new GridItemDividerDecoration(getContext(), mTimeLineAdapter));
         mRecyclerView.setAdapter(mTimeLineAdapter);
-/*        if(PermissionHelper.hasPermissions(getActivity())) {
-            getActivity().getSupportLoaderManager().initLoader(0, null, new MediaLoader(getActivity()));
-        }*/
+
     }
 
 

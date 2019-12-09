@@ -102,9 +102,9 @@ public class PhotoPagerAdapter extends PagerAdapter {
         if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
             Log.d(TAG, "destroyItem: destroy zoom");
             ZoomImageView zoomImageView = ((PhotoViewHolder)view.getTag()).zoomImageView;
-/*            Bitmap bitmap = ((BitmapDrawable)zoomImageView.getDrawable()).getBitmap();
-            bitmap.recycle();*/
- /*           zoomImageView.setSourceImageBitmap(null, mContext);*/
+            Bitmap bitmap = zoomImageView.getSourceBitmap();
+            bitmap.recycle();
+            zoomImageView.setSourceBitmap(null);
             container.removeView(view);
             mPhotoViews.add(view);
         } else if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
@@ -116,10 +116,6 @@ public class PhotoPagerAdapter extends PagerAdapter {
             container.removeView(view);
             mVideoViews.add(view);
         }
-/*        if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
-            ZoomImageView zoomImageView = ((PhotoViewHolder)mPhotoViews.getFirst().getTag()).zoomImageView;
-            zoomImageView
-        }*/
     }
 
     private View instantiatePhotoItem(int position) {

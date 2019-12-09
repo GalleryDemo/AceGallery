@@ -170,16 +170,17 @@ public class ZoomImageView extends AppCompatImageView {
         int screenWidth = ((WindowManager) (AppContext.getInstance().getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay().getWidth();
         int screenHeight = ((WindowManager) (AppContext.getInstance().getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay().getHeight();
 */
+        if (bitmap != null) {
+            WindowManager manager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics outMetrics = new DisplayMetrics();
+            manager.getDefaultDisplay().getMetrics(outMetrics);
 
-        WindowManager manager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        manager.getDefaultDisplay().getMetrics(outMetrics);
+            int screenWidth = outMetrics.widthPixels;
+            int screenHeight = outMetrics.heightPixels;
 
-        int screenWidth = outMetrics.widthPixels;
-        int screenHeight = outMetrics.heightPixels;
-
-        sourceBitmap = resizeImage(sourceBitmap, screenWidth, screenHeight);
-        invalidate();
+            sourceBitmap = resizeImage(sourceBitmap, screenWidth, screenHeight);
+            invalidate();
+        }
     }
 
     public Bitmap resizeImage(Bitmap bitmap, int w, int h) {
@@ -198,7 +199,7 @@ public class ZoomImageView extends AppCompatImageView {
         matrix.postScale(scaleWidth, scaleHeight);
         // if you want to rotate the Bitmap
         // matrix.postRotate(45);
-        Bitmap resizedBitmap = null;
+        Bitmap resizedBitmap;
         try {
             resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
         }catch (OutOfMemoryError e){
@@ -490,4 +491,11 @@ public class ZoomImageView extends AppCompatImageView {
         centerPointY = (yPoint0 + yPoint1) / 2;
     }
 
+    public void setSourceBitmap(Bitmap sourceBitmap) {
+        this.sourceBitmap = sourceBitmap;
+    }
+
+    public Bitmap getSourceBitmap() {
+        return sourceBitmap;
+    }
 }

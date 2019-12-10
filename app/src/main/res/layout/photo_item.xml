@@ -16,7 +16,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></ImageView>
+        app:layout_constraintTop_toTopOf="parent"/>
+
 
     <ImageView
         android:id="@+id/info_bar_tiny"
@@ -55,24 +56,12 @@
 
 
     <TextView
-        android:id="@+id/photo_type_tiny"
+        android:id="@+id/media_info_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
-        android:textSize="9sp"
-        app:layout_constraintBottom_toTopOf="@+id/info_bar_tiny"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <TextView
-        android:id="@+id/video_length_tiny"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
-        android:textSize="9sp"
-        android:alpha="0.85"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/info_bar_tiny"
         app:layout_constraintEnd_toEndOf="parent" />
 

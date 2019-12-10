@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
-import com.GalleryDemo.AceGallery.database.MediaDatabase;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.database.MediaInfoViewModel;
 import com.GalleryDemo.AceGallery.preview.PreviewFragment;
@@ -53,9 +52,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private List<MediaInfoEntity> mItemList = new ArrayList<>();
     private List<Integer> mHeadPositionList = new ArrayList<>();
     private MediaInfoViewModel mViewModel;
-
-    //剔除头结点 待优化 todo
-    private List<MediaInfoEntity> mPhotoList = new ArrayList<>();
 
     private MediaInfoEntity entity;
 
@@ -84,9 +80,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView mPhotoLocation;
         ImageView mMediaType;
         ImageView mMoreButton;
-        TextView mVideoLength;
-        TextView mPhotoType;
-
+        TextView mMediaTag;
 
         BodyViewHolder(final View itemView) {
             super(itemView);
@@ -113,10 +107,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mMediaType = itemView.findViewById(R.id.media_type_tiny);
             mMoreButton = itemView.findViewById(R.id.more_button_tiny);
             mMoreButton.setOnClickListener(this);
-
-            mVideoLength = itemView.findViewById(R.id.video_length_tiny);
-            mPhotoType = itemView.findViewById(R.id.photo_type_tiny);
-
+            mMediaTag = itemView.findViewById(R.id.media_info_tag);
             mFavorImage.setOnClickListener(this);
         }
 
@@ -135,10 +126,10 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             switch (item.getItemId()) {
                                 case R.id.delete:
                                     removeData(getAdapterPosition());
-                                    /*Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();*/
+                                    Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.exit:
-                                    Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Exit", Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
                                     break;
@@ -224,7 +215,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         } else if (holder instanceof FootViewHolder) {
 
-            ((FootViewHolder)holder).mStatView.setText("666 张图片、" + "666 个视频");
+            ((FootViewHolder)holder).mStatView.setText(entity.getMediaHeight() + " 张图片、" + entity.getMediaWidth() + " 个视频");
 
         } else if (holder instanceof BodyViewHolder) {
 
@@ -242,35 +233,30 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             Uri imageUri = Uri.parse(entity.getMediaStringUri());
 
             bodyHolder.mPhoto.setTag(imageUri.toString());
-            String string= bodyHolder.mPhoto.getTag().toString();
 
-                AlbumBitmapCacheHelper.getInstance(ApplicationContextUtils.getContext()).getBitmap(imageUri, mItemList.get(position), bodyHolder.mPhoto, new AlbumBitmapCacheHelper.ILoadImageCallback() {
-                            @Override
-                            public void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView) {
-                                if (bitmap == null) {
-                                    return;
-                                }
-                                if (imageView.getTag().equals(uri.toString())) {
-                                    imageView.setImageBitmap(bitmap);
-                                }
-                            }
-                        });
+            AlbumBitmapCacheHelper.getInstance(ApplicationContextUtils.getContext()).getBitmap(imageUri, mItemList.get(position), bodyHolder.mPhoto, new AlbumBitmapCacheHelper.ILoadImageCallback() {
+                @Override
+                public void onLoadImageCallBack(Bitmap bitmap, Uri uri, ImageView imageView) {
+                    if (bitmap == null) {
+                        return;
+                    }
+                    if (imageView.getTag().equals(uri.toString())) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                }
+            });
 
             bodyHolder.mPhotoDate.setText(entity.getMediaDate());
             bodyHolder.mPhotoLocation.setText(entity.getMediaAddress());
 
-            //Log.d(TAG, "onBindViewHolder: MediaType = " + entity.getMediaType());
             if (entity.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 bodyHolder.mMediaType.setVisibility(View.VISIBLE);
-                bodyHolder.mPhotoType.setVisibility(View.INVISIBLE);
-                bodyHolder.mVideoLength.setVisibility(View.VISIBLE);
-                bodyHolder.mVideoLength.setText(entity.getVideoDuration());
+                bodyHolder.mMediaTag.setText(entity.getVideoDuration());
+
             } else {
                 bodyHolder.mMediaType.setVisibility(View.INVISIBLE);
-                bodyHolder.mVideoLength.setVisibility(View.INVISIBLE);
-                bodyHolder.mPhotoType.setVisibility(View.VISIBLE);
                 final String mediaName = entity.getMediaName();
-                bodyHolder.mPhotoType.setText(mediaName.substring(mediaName.lastIndexOf('.')+1));
+                bodyHolder.mMediaTag.setText(mediaName.substring(mediaName.lastIndexOf('.')+1));
             }
 
             if (entity.isFavor()) {
@@ -293,19 +279,23 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     //把全部数据的列表分成body和head
     void setAdapterList(List<MediaInfoEntity> list) {
-        List<Integer> headList = new ArrayList<>();
+        int videoCount = 0;
+        int photoCount = 0;
+        final List<Integer> headList = new ArrayList<>();
         String lastDate = null;
         for (int i = 0;i < list.size();i ++) {
             MediaInfoEntity item = list.get(i);
             if (item.getDataType() == BODY_TYPE) {
-                if (item.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
-                    mPhotoList.add(item);
-                }
                 //对比时间，时间不同，插入时间节点
+                if (item.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
+                    videoCount ++;
+                } else {
+                    photoCount ++;
+                }
                 if (!item.getMediaDate().equals(lastDate)) {
                     MediaInfoEntity timeLineItem = new MediaInfoEntity(
                             0, null, null,
-                            null, item.getMediaDate(), 0,
+                            null, item.getMediaDate(), -1,
                             null, 0, 0, HEAD_TYPE);
                     list.add(i, timeLineItem);
 
@@ -316,6 +306,17 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
         this.mItemList = list;
+        mViewModel.setPhotoCount(photoCount);
+        mViewModel.setVideoCount(videoCount);
+        final MediaInfoEntity statItem = this.mItemList.get(this.mItemList.size() - 1);
+        if (statItem.getDataType() == FOOT_TYPE) {
+            statItem.setMediaHeight(mViewModel.getPhotoCount());
+            statItem.setMediaWidth(mViewModel.getVideoCount());
+        } else {
+            this.mItemList.add(new MediaInfoEntity(0, null, null,
+                    null, null, -1,
+                    null, mViewModel.getPhotoCount(), mViewModel.getVideoCount(), FOOT_TYPE));
+        }
         notifyDataSetChanged();
 
         this.mHeadPositionList = headList;
@@ -330,12 +331,7 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             final MediaInfoEntity mItem = mItemList.get(pos);
             if (mItem != null) {
                 mContext.getContentResolver().delete(Uri.parse(mItem.getMediaStringUri()), null, null);
-                new Thread() {
-                    @Override
-                    public void run() {
-                        MediaDatabase.getInstance(mContext).getMediaDao().delete(mItem.getMediaId());
-                    }
-                }.start();
+                mViewModel.deleteItem(mItem);
                 int i = mItemList.get(pos - 1).getDataType();
                 Log.d(TAG, "run: " + i);
                 int b = mItemList.size();
@@ -352,13 +348,6 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             }
             notifyDataSetChanged();
-            /*notifyItemRemoved(pos);
-            int c = mItemList.size();
-            Log.d(TAG, "removeData: " + c);
-            if (pos != mItemList.size()) {
-               notifyItemRangeChanged(pos, (mItemList.size() - pos));
-
-            }*/
 
         }
 

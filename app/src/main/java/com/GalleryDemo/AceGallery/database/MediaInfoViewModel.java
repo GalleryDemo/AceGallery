@@ -1,6 +1,7 @@
 package com.GalleryDemo.AceGallery.database;
 
 import android.app.Application;
+import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -11,10 +12,11 @@ import java.util.concurrent.ExecutionException;
 
 public class MediaInfoViewModel extends AndroidViewModel {
 
+    private int videoCount = 0;
+    private int photoCount = 0;
+
     private MediaInfoRepository mRepository;
     private LiveData<List<MediaInfoEntity>> items;
-
-    private LiveData<List<Integer>> timeLineItems;
 
     public MediaInfoViewModel(@NonNull Application application) {
         super(application);
@@ -29,14 +31,6 @@ public class MediaInfoViewModel extends AndroidViewModel {
         return items;
     }
 
-    public LiveData<List<Integer>> getTimeLineItems() {
-        return timeLineItems;
-    }
-
-    public void setTimeLineItems(LiveData<List<Integer>> timeLineItems) {
-        this.timeLineItems = timeLineItems;
-    }
-
     public MediaInfoEntity getItem(int mediaId) throws ExecutionException, InterruptedException {
         return mRepository.getItem(mediaId);
     }
@@ -45,12 +39,32 @@ public class MediaInfoViewModel extends AndroidViewModel {
         mRepository.insertItem(item);
     }
 
-    public void deleteItem(int mediaId) {
-        mRepository.deleteItem(mediaId);
+    public void deleteItem(MediaInfoEntity item) {
+        if (item.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
+            videoCount--;
+        } else {
+            photoCount--;
+        }
+        mRepository.deleteItem(item);
     }
 
     public void update(MediaInfoEntity item) {
         mRepository.update(item);
     }
 
+    public int getVideoCount() {
+        return videoCount;
+    }
+
+    public void setVideoCount(int videoCount) {
+        this.videoCount = videoCount;
+    }
+
+    public int getPhotoCount() {
+        return photoCount;
+    }
+
+    public void setPhotoCount(int photoCount) {
+        this.photoCount = photoCount;
+    }
 }

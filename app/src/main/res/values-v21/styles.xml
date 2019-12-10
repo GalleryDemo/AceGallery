@@ -5,6 +5,9 @@
         <!-- Customize your theme here. -->
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:navigationBarColor">@color/colorGalleryWeekBlack</item>
         <item name="android:statusBarColor">@color/colorGalleryWeekBlack</item>
         <item name="android:textColor">@color/colorGalleryWhite</item>
         <item name="colorPrimary">@color/colorPrimary</item>

@@ -118,6 +118,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
         }
     }
 
+
+
     private View instantiatePhotoItem(int position) {
         View convertView;
         PhotoViewHolder photoViewHolder;

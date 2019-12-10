@@ -2,6 +2,7 @@ package com.GalleryDemo.AceGallery.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -23,8 +24,8 @@ public interface MediaDao {
     @Query("UPDATE MediaInfoEntity SET media_address = :mediaAddress WHERE media_id = :mediaId")
     void updateAddress(int mediaId, String mediaAddress);
 
-    @Query("DELETE FROM MediaInfoEntity WHERE media_id = :mediaId")
-    void delete(int mediaId);
+    @Delete
+    void delete(MediaInfoEntity item);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertItem(MediaInfoEntity item);

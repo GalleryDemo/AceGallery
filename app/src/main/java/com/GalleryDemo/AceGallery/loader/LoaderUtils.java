@@ -26,8 +26,14 @@ public class LoaderUtils {
 
     public static String time2Date (long time) {
         Date date = new Date(time);
-        String result = new SimpleDateFormat("yyyy-MM-dd").format(date);
-        return result;
+        String temp = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        final String[] subDate = temp.split("-");
+        if (subDate.length == 3) {
+            return subDate[0] + "年" + subDate[1] + "月" + subDate[2] + "日";
+        } else {
+            return temp;
+        }
+
     }
 
     public static boolean isSameDay (long time1, long time2) {

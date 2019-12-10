@@ -12,6 +12,8 @@
         android:id="@+id/time_line_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:title="Timeline Gallery"
+        app:titleTextColor="@color/colorGalleryWhite"
         android:background="@color/colorGalleryWeekBlack"
         app:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
 

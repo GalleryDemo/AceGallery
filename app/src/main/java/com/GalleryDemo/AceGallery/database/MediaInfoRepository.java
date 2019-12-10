@@ -30,10 +30,7 @@ public class MediaInfoRepository {
     }
 
     public LiveData<List<MediaInfoEntity>> getAllItems() {
-
         return mMediaInfoList;
-        /*return new getAllItemsAsync(mMediaDao).execute().get();*/
-
     }
 
     public MediaInfoEntity getItem(int mediaId) throws ExecutionException, InterruptedException {
@@ -45,8 +42,8 @@ public class MediaInfoRepository {
     }
 
 
-    public void deleteItem(int mediaId) {
-        new deleteItemAsync(mMediaDao).execute(mediaId);
+    public void deleteItem(MediaInfoEntity item) {
+        new deleteItemAsync(mMediaDao).execute(item);
     }
 
 
@@ -83,7 +80,7 @@ public class MediaInfoRepository {
     }
 
 
-    private static class deleteItemAsync extends AsyncTask<Integer, Void, Void> {
+    private static class deleteItemAsync extends AsyncTask<MediaInfoEntity, Void, Void> {
 
         private MediaDao mMediaDaoAsync;
 
@@ -92,8 +89,8 @@ public class MediaInfoRepository {
         }
 
         @Override
-        protected Void doInBackground(Integer... integers) {
-            mMediaDaoAsync.delete(integers[0]);
+        protected Void doInBackground(MediaInfoEntity... mediaInfoEntities) {
+            mMediaDaoAsync.delete(mediaInfoEntities[0]);
             return null;
         }
     }

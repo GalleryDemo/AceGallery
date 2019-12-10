@@ -41,19 +41,20 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
 
         Uri queryUri = MediaStore.Files.getContentUri("external");
         CursorLoader cursorLoader = new CursorLoader(mContext, queryUri, null, selection,
-                null, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC");
+                null, MediaStore.Files.FileColumns.DATE_TAKEN + " DESC");
         return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader loader, Object data) {
 
+        int videoCount = 0;
+        int photoCount = 0;
         mRepository = new MediaInfoRepository(ApplicationContextUtils.getInstance());
 
         Cursor mCursor = (Cursor) data; //接收返回的cursor
         while (mCursor.moveToNext()) {
             //拼接获取多媒体资源的Uri
-            //String mediaPath = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DOCUMENT_ID));
             int mediaId = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID));
             Uri mediaUri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), mediaId + "");
             //Todo: recover the location method
@@ -97,7 +98,6 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
                     mediaUri.toString(), mediaName, mediaDate, mediaType,
                     null, mediaHeight, mediaWidth, BODY_TYPE);
 
-
             if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 long duration = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
                 bodyEntity.setVideoDuration(LoaderUtils.stringForTime(duration));
@@ -106,18 +106,7 @@ public class MediaLoader implements LoaderManager.LoaderCallbacks {
             }
 
             mRepository.insertItem(bodyEntity);
-            //Log.d(TAG, "onLoadFinished: insertBody: offset = " + bodyEntity.getItem_id() + " mediaId = " + bodyEntity.getMediaId() + " mediaDate = " + bodyEntity.getMediaDate());
 
-/*            boolean isSameDay = LoaderUtils.isSameDay(lastTime, mediaTime);
-            if (!isSameDay) {
-                offset++;
-                MediaInfoEntity headEntity = new MediaInfoEntity(mediaId + offset, mediaId + offset, null,
-                        null, null, mediaDate, 0,
-                        null, 0, 0, HEAD_TYPE);
-                mRepository.insertItem(headEntity);
-                Log.d(TAG, "onLoadFinished: insertHead: offset = " + headEntity.getItem_id() + " mediaId = " + headEntity.getMediaId() + " mediaDate = " + headEntity.getMediaDate());
-                lastTime = mediaTime;
-            }*/
         }
     }
 

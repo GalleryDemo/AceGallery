@@ -1,6 +1,8 @@
 package com.GalleryDemo.AceGallery.preview;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
@@ -19,11 +21,18 @@ import com.GalleryDemo.AceGallery.R;
 import com.GalleryDemo.AceGallery.Utils.ApplicationContextUtils;
 import com.GalleryDemo.AceGallery.database.MediaInfoEntity;
 import com.GalleryDemo.AceGallery.preview.image.ImageAsyncTaskHelper;
-import com.GalleryDemo.AceGallery.preview.image.ZoomImageView;
+
+import com.GalleryDemo.AceGallery.preview.image.intensifyimage.IntensifyImage;
+;
+import com.GalleryDemo.AceGallery.preview.image.intensifyimage.IntensifyImageView;
 import com.GalleryDemo.AceGallery.preview.video.VideoSurfaceFragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +61,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
     }
 
     class PhotoViewHolder {
-        ZoomImageView zoomImageView = null;
+        //ZoomImageView zoomImageView = null;
+        IntensifyImage intensifyImage =null;
     }
 
     class VideoViewHolder {
@@ -84,10 +94,16 @@ public class PhotoPagerAdapter extends PagerAdapter {
         } else if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
             Log.d(TAG, "instantiateItem: PhotoPosition = " + position);
 
-            View photoView = instantiatePhotoItem(position);
+            IntensifyImageView imageView = new IntensifyImageView(container.getContext());
+            imageView.setScaleType(IntensifyImage.ScaleType.FIT_AUTO);
 
-            container.addView(photoView);
-            return photoView;
+            final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
+            Log.d(TAG, "path: "+mPagerList.get(position).getMediaStringUri());
+            imageView.setImage(getRealFilePath(photoUri));
+            //View photoView = instantiatePhotoItem(position);
+
+             container.addView(imageView);
+            return imageView;
 
         } else {
             return null;
@@ -101,12 +117,15 @@ public class PhotoPagerAdapter extends PagerAdapter {
         Log.d(TAG, "destroyItem: View class is = " + object.getClass());
         if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
             Log.d(TAG, "destroyItem: destroy zoom");
-            ZoomImageView zoomImageView = ((PhotoViewHolder)view.getTag()).zoomImageView;
-            Bitmap bitmap = zoomImageView.getSourceBitmap();
-            bitmap.recycle();
-            zoomImageView.setSourceBitmap(null);
+            //ZoomImageView zoomImageView = ((PhotoViewHolder)view.getTag()).zoomImageView;
+
+
+            //IntensifyImage intensifyImage = ((PhotoViewHolder)view.getTag()).intensifyImage;
+/*            Bitmap bitmap = ((BitmapDrawable)zoomImageView.getDrawable()).getBitmap();
+            bitmap.recycle();*/
+ /*           zoomImageView.setSourceImageBitmap(null, mContext);*/
             container.removeView(view);
-            mPhotoViews.add(view);
+            //mPhotoViews.add(view);
         } else if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
             Log.d(TAG, "destroyItem: destroy video");
             ImageView imageView = ((VideoViewHolder)view.getTag()).mVideoPick;
@@ -116,9 +135,11 @@ public class PhotoPagerAdapter extends PagerAdapter {
             container.removeView(view);
             mVideoViews.add(view);
         }
+/*        if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
+            ZoomImageView zoomImageView = ((PhotoViewHolder)mPhotoViews.getFirst().getTag()).zoomImageView;
+            zoomImageView
+        }*/
     }
-
-
 
     private View instantiatePhotoItem(int position) {
         View convertView;
@@ -126,7 +147,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         if (mPhotoViews.size() == 0) {
             photoViewHolder = new PhotoViewHolder();
             convertView = LayoutInflater.from(ApplicationContextUtils.getContext()).inflate(R.layout.widget_zoom_image, null);
-            photoViewHolder.zoomImageView = convertView.findViewById(R.id.photoImage);
+            photoViewHolder.intensifyImage = convertView.findViewById(R.id.photoImage);
             convertView.setTag(photoViewHolder);
         } else {
             convertView = mPhotoViews.removeFirst();
@@ -134,7 +155,16 @@ public class PhotoPagerAdapter extends PagerAdapter {
         }
 
         final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
-        new ImageAsyncTaskHelper.photoAsyncTask(photoViewHolder.zoomImageView, mContext).execute(photoUri);
+/*        InputStream is = null;
+        try {
+            is = mContext.getContentResolver().openInputStream(photoUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }*/
+
+        Log.d(TAG, "path: "+mPagerList.get(position).getMediaStringUri());
+        photoViewHolder.intensifyImage.setImage(getRealFilePath(photoUri));
+
         return convertView;
     }
 
@@ -190,6 +220,28 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
     public List<MediaInfoEntity> getPagerList() {
         return mPagerList;
+    }
+
+    public String getRealFilePath(Uri uri) {
+        final String scheme = uri.getScheme();
+        String data = null;
+        if (scheme == null)
+            data = uri.getPath();
+        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            data = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            Cursor cursor = mContext.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    if (index > -1) {
+                        data = cursor.getString(index);
+                    }
+                }
+                cursor.close();
+            }
+        }
+        return data;
     }
 
 

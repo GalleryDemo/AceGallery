@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:background="@color/colorGalleryWeekBlack">
 
-    <com.GalleryDemo.AceGallery.preview.image.map.ImageSurfaceView
+    <com.GalleryDemo.AceGallery.preview.image.intensifyimage.IntensifyImageView
         android:id="@+id/photoImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

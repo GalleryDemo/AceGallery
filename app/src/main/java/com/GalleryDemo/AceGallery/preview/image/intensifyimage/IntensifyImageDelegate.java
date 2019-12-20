@@ -122,6 +122,11 @@ class IntensifyImageDelegate {
     }
 
     public void load(ImageDecoder decoder) {
+
+        if(decoder== null ){
+            Log.e(TAG, "load:  decoder== null" );
+        }
+
         mHandler.removeCallbacksAndMessages(null);
         sendMessage(MSG_IMAGE_RELEASE);
         sendMessage(MSG_IMAGE_SRC, decoder);
@@ -559,11 +564,11 @@ class IntensifyImageDelegate {
         }
 
         ArrayList<ImageDrawable> drawables = obtainBaseDrawables();
-        Logger.e(TAG,"ArrayList<ImageDrawable> drawables:"+drawables.size());
+        //Logger.e(TAG,"ArrayList<ImageDrawable> drawables:"+drawables.size());
 
         //之前有 prepareDraw(Rect rect) 准备好mDrawables
         drawables.addAll(mDrawables);
-        Logger.e(TAG,"ArrayList<ImageDrawable> drawables  addall:"+drawables.size());
+        //Logger.e(TAG,"ArrayList<ImageDrawable> drawables  addall:"+drawables.size());
         if (!Utils.equals(mImage.mCurrentState, Pair.create(mImageArea, drawingRect))) {
             mHandler.removeMessages(MSG_IMAGE_DRAW);
             sendMessage(MSG_IMAGE_DRAW, drawingRect);
@@ -663,6 +668,7 @@ class IntensifyImageDelegate {
             try {
                 mImageRegion = decoder.newRegionDecoder();
             } catch (IOException e) {
+                Log.e(TAG, "Image: ", e);
                 throw new RuntimeException("无法访问图片");
             }
 

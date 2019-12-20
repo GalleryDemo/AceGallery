@@ -31,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -99,7 +101,30 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
             final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
             Log.d(TAG, "path: "+mPagerList.get(position).getMediaStringUri());
-            imageView.setImage(getRealFilePath(photoUri));
+
+/*            String filepath = getRealFilePath(photoUri);
+            Log.d(TAG, "path: " + filepath);*/
+
+            InputStream is = null;
+            try {
+                is = mContext.getContentResolver().openInputStream(photoUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            imageView.setImage(is);
+
+
+/*
+            if (filepath != null ){
+                imageView.setImage(is);
+            }else{
+                Log.e(TAG, "path = null ");
+            }
+*/
+
+            Log.d(TAG, "________________________________");
+
             //View photoView = instantiatePhotoItem(position);
 
              container.addView(imageView);
@@ -114,9 +139,9 @@ public class PhotoPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         View view = (View) object;
-        Log.d(TAG, "destroyItem: View class is = " + object.getClass());
+        //Log.d(TAG, "destroyItem: View class is = " + object.getClass());
         if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
-            Log.d(TAG, "destroyItem: destroy zoom");
+            //Log.d(TAG, "destroyItem: destroy zoom");
             //ZoomImageView zoomImageView = ((PhotoViewHolder)view.getTag()).zoomImageView;
 
 
@@ -127,7 +152,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
             container.removeView(view);
             //mPhotoViews.add(view);
         } else if (mPagerList.get(position).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
-            Log.d(TAG, "destroyItem: destroy video");
+            //Log.d(TAG, "destroyItem: destroy video");
             ImageView imageView = ((VideoViewHolder)view.getTag()).mVideoPick;
             Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
             bitmap.recycle();
@@ -155,15 +180,16 @@ public class PhotoPagerAdapter extends PagerAdapter {
         }
 
         final Uri photoUri = Uri.parse(mPagerList.get(position).getMediaStringUri());
-/*        InputStream is = null;
+        InputStream is = null;
         try {
             is = mContext.getContentResolver().openInputStream(photoUri);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }*/
+        }
+
 
         Log.d(TAG, "path: "+mPagerList.get(position).getMediaStringUri());
-        photoViewHolder.intensifyImage.setImage(getRealFilePath(photoUri));
+        photoViewHolder.intensifyImage.setImage(is);
 
         return convertView;
     }

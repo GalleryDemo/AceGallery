@@ -308,14 +308,17 @@ public class GalleryTimeLineAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.mItemList = list;
         mViewModel.setPhotoCount(photoCount);
         mViewModel.setVideoCount(videoCount);
-        final MediaInfoEntity statItem = this.mItemList.get(this.mItemList.size() - 1);
-        if (statItem.getDataType() == FOOT_TYPE) {
-            statItem.setMediaHeight(mViewModel.getPhotoCount());
-            statItem.setMediaWidth(mViewModel.getVideoCount());
-        } else {
-            this.mItemList.add(new MediaInfoEntity(0, null, null,
-                    null, null, -1,
-                    null, mViewModel.getPhotoCount(), mViewModel.getVideoCount(), FOOT_TYPE));
+        final MediaInfoEntity statItem;
+        if (this.mItemList.size() != 0) {
+            statItem= this.mItemList.get(this.mItemList.size() - 1);
+            if (statItem.getDataType() == FOOT_TYPE) {
+                statItem.setMediaHeight(mViewModel.getPhotoCount());
+                statItem.setMediaWidth(mViewModel.getVideoCount());
+            } else {
+                this.mItemList.add(new MediaInfoEntity(0, null, null,
+                        null, null, -1,
+                        null, mViewModel.getPhotoCount(), mViewModel.getVideoCount(), FOOT_TYPE));
+            }
         }
         notifyDataSetChanged();
 
